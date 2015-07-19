@@ -1,40 +1,24 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "SDL.h"
+#include "Game.h"
 #include <stdio.h>
+#include <windows.h>
 
 int main(int argc, char* argv[]) {
-	SDL_Window*	sdlWindow;
-
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());
-		exit(0);
+	if (AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole()){
+		freopen("CONOUT$", "w", stdout);
+		freopen("CONOUT$", "w", stderr);
 	}
-
-	if ((sdlWindow = SDL_CreateWindow(
-		"Bacon",
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
-		1920,
-		1080,
-		SDL_WINDOW_FULLSCREEN)
-		) == NULL) {
-		return false;
+	Game g = Game();
+	int err = g.InitSDL();
+	if (err != 0) {
+		return err;
 	}
-	SDL_Renderer *sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0);
-	SDL_SetRenderDrawColor(sdlRenderer, 255, 0, 0, 255);
-	SDL_RenderClear(sdlRenderer);
-	SDL_RenderPresent(sdlRenderer);
-
-	int i = 0; while (++i < 10000) {
-		SDL_SetRenderDrawColor(sdlRenderer, 255, 0, 0, 255);
-		SDL_RenderClear(sdlRenderer);
-		SDL_RenderPresent(sdlRenderer);
-		SDL_SetRenderDrawColor(sdlRenderer, 0, 255, 0, 255);
-		SDL_RenderClear(sdlRenderer);
-		SDL_RenderPresent(sdlRenderer);
-		SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 255, 255);
-		SDL_RenderClear(sdlRenderer);
-		SDL_RenderPresent(sdlRenderer);
+	err = g.InitTestImage();
+	if (err != 0) {
+		return err;
 	}
-	SDL_Quit();
+	g.Run();
+	g.Clean();
 	return 0;
 }
