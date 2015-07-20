@@ -1,6 +1,7 @@
 #include "Game.h"
-#include "SDL_image.h"
 #include <stdio.h>
+#include "SDL_image.h"
+#include "MathUtils.h"
 
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
