@@ -1,20 +1,26 @@
 #define _CRT_SECURE_NO_WARNINGS
+#ifdef _DEBUG
+#undef NDDEBUG
+#else
+#define NDEBUG
+#endif
+
+
 #include "SDL.h"
-#include "Game.h"
+#include "RPGGame.h"
 #include <stdio.h>
 #include <windows.h>
 
 int main(int argc, char* argv[]) {
+#ifdef _DEBUG
+	// redirects sdterr and stdout to another window
 	if (AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole()){
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);
 	}
-	Game g = Game();
+#endif
+	RPGGame g = RPGGame();
 	int err = g.InitSDL();
-	if (err != 0) {
-		return err;
-	}
-	err = g.InitTestImage();
 	if (err != 0) {
 		return err;
 	}

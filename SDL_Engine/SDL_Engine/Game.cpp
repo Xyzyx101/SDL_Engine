@@ -15,8 +15,7 @@ running_( true ),
 window_( 0 ),
 renderer_( 0 ),
 screenWidth_( DEFAULT_SCREEN_WIDTH ),
-screenHeight_( DEFAULT_SCREEN_HEIGHT ),
-testImage_( 0 ) {}
+screenHeight_( DEFAULT_SCREEN_HEIGHT ) {}
 
 Game::~Game( void ) {}
 
@@ -48,53 +47,33 @@ int Game::InitSDL() {
 	}
 	SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "linear" );  // make the scaled rendering look smoother.
 	SDL_RenderSetLogicalSize( renderer_, screenWidth_, screenHeight_ );
-	return 0;
-}
-
-int Game::InitTestImage() {
-	SDL_Surface* surface = IMG_Load( "party.png" );
-	if( surface==NULL ) {
-		fprintf( stderr, "Image failed to load: %s\n", IMG_GetError() );
-		SDL_DestroyWindow( window_ );
-		SDL_Quit();
-		return 4;
-	}
-	testImage_ = SDL_CreateTextureFromSurface( renderer_, surface );
-	SDL_FreeSurface( surface );
-	if( testImage_==nullptr ) {
-		fprintf( stderr, "Failed to create texture: %s\n", SDL_GetError() );
-		SDL_DestroyRenderer( renderer_ );
-		SDL_DestroyWindow( window_ );
-		SDL_Quit();
-		return 5;
-	}
+	loadAssets();
 	return 0;
 }
 
 void Game::Run() {
+	Uint32 lastTime = SDL_GetTicks(), currentTime = 0, dt;
 	SDL_Event newEvent;
 	while( running_ ) {
 		while( SDL_PollEvent( &newEvent ) ) {
 			handleEvent( newEvent );
 		}
-		pos_ += velocity_;
-		Draw();
+
+		currentTime = SDL_GetTicks();
+		dt = currentTime-lastTime;
+		lastTime = currentTime;
+
+		//clear renderer
+		SDL_SetRenderDrawColor( renderer_, CLEAR_COLOR_R, CLEAR_COLOR_G, CLEAR_COLOR_B, 255 );
+		SDL_RenderClear( renderer_ );
+		update( dt );
+		draw();
 	}
 }
 
-void Game::Draw() {
-	//clear renderer
-	SDL_SetRenderDrawColor( renderer_, CLEAR_COLOR_R, CLEAR_COLOR_G, CLEAR_COLOR_B, 255 );
-	SDL_RenderClear( renderer_ );
+void Game::draw() {
 
-	SDL_Rect dstRect;
-	dstRect.x = (Sint16)pos_.x;
-	dstRect.y = (Sint16)pos_.y;
-	dstRect.w = screenWidth_;
-	dstRect.h = screenHeight_;
-
-	//draw texture
-	SDL_RenderCopy( renderer_, testImage_, NULL, &dstRect );
+	// rendering should happen in inherited class before calling this
 
 	//update screen
 	SDL_RenderPresent( renderer_ );
@@ -115,33 +94,18 @@ void Game::handleEvent( const SDL_Event& e ) {
 }
 
 void Game::onKeyDown( Uint32 key ) {
-	if( key==SDLK_UP ) {
-		velocity_.y -= 1.0f;
+	if( key==SDLK_ESCAPE ) {
+		running_ = false;
 	}
-	if( key==SDLK_DOWN ) {
-		velocity_.y += 1.0f;
-	}
-	if( key==SDLK_LEFT ) {
-		velocity_.x -= 1.0f;
-	}
-	if( key==SDLK_RIGHT ) {
-		velocity_.x += 1.0f;
-	}
+	
 }
 
 void Game::onKeyUp( Uint32 key ) {
-	if( key==SDLK_UP ) {
-		velocity_.y = 0.0f;
-	}
-	if( key==SDLK_DOWN ) {
-		velocity_.y = 0.0f;
-	}
-	if( key==SDLK_LEFT ) {
-		velocity_.x = 0.0f;
-	}
-	if( key==SDLK_RIGHT ) {
-		velocity_.x = 0.0f;
-	}
+}
+
+
+Vec2 Game::getScreenSize() {
+	return Vec2( screenWidth_, screenHeight_ );
 }
 
 void Game::Clean() {
