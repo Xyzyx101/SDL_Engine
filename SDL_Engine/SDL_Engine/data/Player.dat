@@ -1,15 +1,16 @@
 # Player Object
 
-image player.png
+image Player.png
 animated true
 
 anim {
 	animName stand
-	frametime 0
+	frameTime 999
 	sequence { 0 }
 	loop false
 	numCells 1
 	cell {
+		index 0
 		x 32
 		y 0
 		w 32

@@ -6,6 +6,7 @@
 #include <cctype>
 #include <assert.h>
 #include "Player.h"
+#include "Sprite.h"
 
 ObjectFactory::ObjectFactory() {}
 ObjectFactory::~ObjectFactory() {}
@@ -78,9 +79,9 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 	int err = 0;
 	while( it<tokens.end() ) {
 		if( *it=="image" ) {
-			imageFile = *it;
+			imageFile = *++it;
 		} else if( *it=="animated" ) {
-			animated = *it=="true";
+			animated = *++it=="true";
 		} else if( *it=="anim" ) {
 			if( expect( *++it, "{" ) ) {
 				++it;
@@ -95,11 +96,11 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 			std::map<Uint16, Sprite::Anim::Cell> cells;
 			while( it<tokens.end() ) {
 				if( *it=="animName" ) {
-					animName = *it;
+					animName = *++it;
 				} else 	if( *it=="numCells" ) {
-					numCells = (Uint16)atoi( it->c_str() );
+					numCells = (Uint16)atoi( (++it)->c_str() );
 				} else 	if( *it=="frameTime" ) {
-					frameTime = (Uint16)atoi( it->c_str() );
+					frameTime = (Uint16)atoi( (++it)->c_str() );
 				} else if( *it=="sequence" ) {
 					if( expect( *++it, "{" ) ) {
 						++it;
@@ -119,7 +120,7 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 						++it;
 					}
 				} else if( *it=="loop" ) {
-					loop = *it=="true";
+					loop = *(++it)=="true";
 				} else if( *it=="cell" ) {
 					if( expect( *++it, "{" ) ) {
 						++it;
@@ -129,29 +130,29 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 					CellData cellData;
 					while( it<tokens.end() ) {
 						if( *it=="index" ) {
-							cellData.index = (Uint16)atoi( it->c_str() );
-						}else
-						if( *it=="x" ) {
-							cellData.x = (Uint16)atoi( it->c_str() );
-						} else if( *it=="y" ) {
-							cellData.y = (Uint16)atoi( it->c_str() );
-						} else if( *it=="w" ) {
-							cellData.w = (Uint16)atoi( it->c_str() );
-						} else if( *it=="h" ) {
-							cellData.h = (Uint16)atoi( it->c_str() );
-						} else if( *it=="offsetX" ) {
-							cellData.offsetX = (Uint16)atoi( it->c_str() );
-						} else if( *it=="offsetY" ) {
-							cellData.offsetY = (Uint16)atoi( it->c_str() );
-						} else if( *it=="}" ) {
-							cells[cellData.index] = Sprite::Anim::Cell( cellData.x, cellData.y, cellData.w, cellData.h, cellData.offsetX, cellData.offsetY );
-							//cell done
-							break;
-						} else {
-							fprintf( stderr, "Unexpected token %s", *it );
-							err = 3;
-						}
-						++it;
+							cellData.index = (Uint16)atoi( (++it)->c_str() );
+						} else
+							if( *it=="x" ) {
+								cellData.x = (Uint16)atoi( (++it)->c_str() );
+							} else if( *it=="y" ) {
+								cellData.y = (Uint16)atoi( (++it)->c_str() );
+							} else if( *it=="w" ) {
+								cellData.w = (Uint16)atoi( (++it)->c_str() );
+							} else if( *it=="h" ) {
+								cellData.h = (Uint16)atoi( (++it)->c_str() );
+							} else if( *it=="offsetX" ) {
+								cellData.offsetX = (Uint16)atoi( (++it)->c_str() );
+							} else if( *it=="offsetY" ) {
+								cellData.offsetY = (Uint16)atoi( (++it)->c_str() );
+							} else if( *it=="}" ) {
+								cells[cellData.index] = Sprite::Anim::Cell( cellData.x, cellData.y, cellData.w, cellData.h, cellData.offsetX, cellData.offsetY );
+								//cell done
+								break;
+							} else {
+								fprintf( stderr, "Unexpected token %s", *it );
+								err = 3;
+							}
+							++it;
 					}
 				} else if( *it=="}" ) {
 					Sprite::Anim anim = Sprite::Anim( numCells, sequence, frameTime, loop );
@@ -172,12 +173,15 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 		++it;
 	}
 	sprite = new Sprite( renderer_, imageFile, animated );
+	for( auto it = anims.begin(); it!=anims.end(); ++it ) {
+		sprite->addAnim( it->first, it->second );
+	}
 	GameObject* obj;
 	switch( type ) {
 	case GameObject::TYPE::PLAYER:
-		obj = new Player(sprite);
+		obj = new Player( sprite );
 		break;
-//	case GameObject::TYPE::ENEMY:
+		//	case GameObject::TYPE::ENEMY:
 		// FIXME GameObject* obj = new Enemy();
 	default:
 		obj = nullptr;

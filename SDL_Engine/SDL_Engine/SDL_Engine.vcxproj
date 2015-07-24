@@ -54,7 +54,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>..\..\SDL2_image-2.0.0;..\..\SDL2-2.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -111,7 +111,7 @@ xcopy /y "..\..\SDL2_image-2.0.0\VisualC\external\lib\x86\*.dll" "$(ProjectDir)"
     <ClInclude Include="Sprite.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\Player.dat" />
+    <None Include="data\Player.dat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

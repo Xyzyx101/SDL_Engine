@@ -40,7 +40,13 @@ pRenderer_( renderer ),
 animated_( animated ),
 pos_( pos ) {
 	int err = 0;
-	SDL_Surface* surface = IMG_Load( filename.c_str() );
+#ifdef _WIN32
+	const std::string pathSeparator = "\\";
+#else
+	const std::string pathSeparator = "/";
+#endif
+	std::string path = "sprites"+pathSeparator+filename;
+	SDL_Surface* surface = IMG_Load( path.c_str() );
 	if( surface==NULL ) {
 		fprintf( stderr, "Failed to load '%s': %s\n", filename, IMG_GetError() );
 		err = 1;
@@ -138,6 +144,10 @@ void Sprite::changeAnim( std::string newAnim ) {
 	drawData_.currentAnim_->reset();
 }
 
+void Sprite::addAnim( std::string animName, Sprite::Anim anim ) {
+	anims_[animName] = anim;
+}
+
 Sprite::Anim::Anim() {}
 Sprite::Anim::Anim( Uint16 numCells, std::vector<Uint16> sequence, Uint32 frameTime, bool loop ) :
 sequence_( sequence ),
@@ -158,8 +168,9 @@ void Sprite::Anim::update( Uint32 dt ) {
 		if( loop_ ) {
 			currentFrame_ = (currentFrame_+1)%sequence_.size();
 		} else {
-			currentFrame_ = SDL_max( currentFrame_+1, (Uint16)sequence_.size()-1 );
+			currentFrame_ = SDL_min( currentFrame_+1, (Uint16)(sequence_.size()-1) );
 		}
+		currentTime_ -= frameTime_;
 	}
 }
 

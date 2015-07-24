@@ -64,7 +64,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\Player.dat">
+    <None Include="data\Player.dat">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

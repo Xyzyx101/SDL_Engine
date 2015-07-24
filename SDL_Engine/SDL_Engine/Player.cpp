@@ -29,6 +29,7 @@ void Player::update( Uint32 dt ) {
 }
 
 void Player::draw() {
+	sprite_->setPos( pos_ );
 	sprite_->draw();
 }
 
