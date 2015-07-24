@@ -13,9 +13,9 @@ public:
 	Sprite( SDL_Renderer* renderer, SDL_Texture* image, bool animated );
 	Sprite( SDL_Renderer* renderer, SDL_Texture* image, bool animated, Vec2 pos );
 	Sprite( SDL_Renderer* renderer, SDL_Texture* image, bool animated, Vec2 pos, Uint8 alpha );
-	Sprite( SDL_Renderer* renderer, char* fileName, bool animated );
-	Sprite( SDL_Renderer* renderer, char* fileName, bool animated, Vec2 pos );
-	Sprite( SDL_Renderer* renderer, char* fileName, bool animated, Vec2 pos, Uint8 alpha );
+	Sprite( SDL_Renderer* renderer, std::string fileName, bool animated );
+	Sprite( SDL_Renderer* renderer, std::string fileName, bool animated, Vec2 pos );
+	Sprite( SDL_Renderer* renderer, std::string fileName, bool animated, Vec2 pos, Uint8 alpha );
 	~Sprite();
 
 	class Anim {

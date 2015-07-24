@@ -29,18 +29,18 @@ pos_( pos ) {
 	}
 }
 
-Sprite::Sprite( SDL_Renderer* renderer, char* filename, bool animated = false ) :
+Sprite::Sprite( SDL_Renderer* renderer, std::string filename, bool animated = false ) :
 Sprite( renderer, filename, animated, Vec2() ) {}
 
-Sprite::Sprite( SDL_Renderer* renderer, char* filename, bool animated, Vec2 pos ) :
+Sprite::Sprite( SDL_Renderer* renderer, std::string filename, bool animated, Vec2 pos ) :
 Sprite( renderer, filename, animated, pos, 255 ) {}
 
-Sprite::Sprite( SDL_Renderer* renderer, char* filename, bool animated, Vec2 pos, Uint8 alpha ) :
+Sprite::Sprite( SDL_Renderer* renderer, std::string filename, bool animated, Vec2 pos, Uint8 alpha ) :
 pRenderer_( renderer ),
 animated_( animated ),
 pos_( pos ) {
 	int err = 0;
-	SDL_Surface* surface = IMG_Load( filename );
+	SDL_Surface* surface = IMG_Load( filename.c_str() );
 	if( surface==NULL ) {
 		fprintf( stderr, "Failed to load '%s': %s\n", filename, IMG_GetError() );
 		err = 1;
