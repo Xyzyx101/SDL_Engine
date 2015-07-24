@@ -1,16 +1,16 @@
 #include "Player.h"
 #include "Sprite.h"
 
-Player::Player( Sprite* sprite ) : sprite_( sprite ), speed_(150) {}
+Player::Player( Sprite* sprite ) : sprite_( sprite ), speed_( 150.f ) {}
 
 Player::~Player() {
 	delete sprite_;
 }
 
-void Player::update( Sint32 dt ) {
+void Player::update( Uint32 dt ) {
 	vel_ = VectorMath::Normalize( &vel_ );
 	if( vel_.x==0&&vel_.y==0 ) {
-
+		sprite_->changeAnim( "stand" );
 	} else if( abs( vel_.y )>abs( vel_.x ) ) {
 		if( vel_.y>0 ) {
 			sprite_->changeAnim( "down" );
@@ -24,16 +24,16 @@ void Player::update( Sint32 dt ) {
 			sprite_->changeAnim( "left" );
 		}
 	}
-	pos_ += vel_ * speed_ * dt;
+	pos_ += vel_ * speed_ * (float)dt;
 	sprite_->update( dt );
 }
 
-void Player::draw( Sint32 dt ) {
-
+void Player::draw() {
+	sprite_->draw();
 }
 
 void Player::setPos( Vec2 pos ) {
-
+	pos_ = pos;
 }
 
 void Player::OnKeyDown( Uint16 key ) {

@@ -102,6 +102,12 @@ int Sprite::loadImage( char* filename ) {
 	return 0;
 }
 
+void Sprite::update( Uint32 dt ) {
+	if( animated_ ) {
+		drawData_.currentAnim_->update( dt );
+	}
+}
+
 // draw will draw the image to the backbuffer but SDL_RenderPresent must be called somewhere else to actually be visible
 void Sprite::draw() {
 	SDL_Rect dest;

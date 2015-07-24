@@ -4,9 +4,13 @@
 #include <sstream>
 #include <algorithm>
 #include <cctype>
+#include <assert.h>
+#include "Player.h"
 
 ObjectFactory::ObjectFactory() {}
 ObjectFactory::~ObjectFactory() {}
+
+ObjectFactory* ObjectFactory::instance_ = new ObjectFactory();
 
 void ObjectFactory::Init( SDL_Renderer* renderer ) {
 	ObjectFactory::instance_->renderer_ = renderer;
@@ -17,7 +21,7 @@ GameObject* ObjectFactory::Instantiate( GameObject::TYPE type, Vec2 pos ) {
 		ObjectFactory::instance_->loadData( type );
 	}
 	GameObject* obj = ObjectFactory::instance_->createObject( type );
-	obj.setPos( pos );
+	obj->setPos( pos );
 	return obj;
 }
 
@@ -35,14 +39,13 @@ void ObjectFactory::loadData( GameObject::TYPE type ) {
 }
 
 void ObjectFactory::loadFile( GameObject::TYPE type, std::string filename ) {
-
 #ifdef _WIN32
-	const wchar_t pathSeparator = '\\';
+	const std::string pathSeparator = "\\";
 #else
-	const char pathSeparator =	'/';
+	const std::string pathSeparator = "/";
 #endif
 	std::string path = "data"+pathSeparator+filename;
-	std::ifstream is( "test.txt", std::ifstream::in );
+	std::ifstream is( path, std::ifstream::in );
 	if( !is.good() ) {
 		fprintf( stderr, "Error opening file: %s\n", path );
 		is.close();
@@ -65,7 +68,8 @@ void ObjectFactory::loadFile( GameObject::TYPE type, std::string filename ) {
 }
 
 GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
-	std::string	filename;
+	Sprite* sprite;
+	std::string	imageFile;
 	bool animated;
 	std::map<std::string, Sprite::Anim> anims;
 
@@ -74,7 +78,7 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 	int err = 0;
 	while( it<tokens.end() ) {
 		if( *it=="image" ) {
-			filename = *it;
+			imageFile = *it;
 		} else if( *it=="animated" ) {
 			animated = *it=="true";
 		} else if( *it=="anim" ) {
@@ -88,10 +92,12 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 			std::vector<Uint16> sequence;
 			Uint32 frameTime;
 			bool loop;
-			std::vector<Sprite::Anim::Cell> cells;
+			std::map<Uint16, Sprite::Anim::Cell> cells;
 			while( it<tokens.end() ) {
 				if( *it=="animName" ) {
 					animName = *it;
+				} else 	if( *it=="numCells" ) {
+					numCells = (Uint16)atoi( it->c_str() );
 				} else 	if( *it=="frameTime" ) {
 					frameTime = (Uint16)atoi( it->c_str() );
 				} else if( *it=="sequence" ) {
@@ -122,6 +128,9 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 					}
 					CellData cellData;
 					while( it<tokens.end() ) {
+						if( *it=="index" ) {
+							cellData.index = (Uint16)atoi( it->c_str() );
+						}else
 						if( *it=="x" ) {
 							cellData.x = (Uint16)atoi( it->c_str() );
 						} else if( *it=="y" ) {
@@ -135,7 +144,7 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 						} else if( *it=="offsetY" ) {
 							cellData.offsetY = (Uint16)atoi( it->c_str() );
 						} else if( *it=="}" ) {
-							cells.push_back( Sprite::Anim::Cell( cellData.x, cellData.y, cellData.w, cellData.h, cellData.offsetX, cellData.offsetY ) );
+							cells[cellData.index] = Sprite::Anim::Cell( cellData.x, cellData.y, cellData.w, cellData.h, cellData.offsetX, cellData.offsetY );
 							//cell done
 							break;
 						} else {
@@ -145,7 +154,12 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 						++it;
 					}
 				} else if( *it=="}" ) {
-					anims[animName] = Sprite::Anim( numCells, sequence, frameTime, loop );
+					Sprite::Anim anim = Sprite::Anim( numCells, sequence, frameTime, loop );
+					for( auto it = cells.begin(); it!=cells.end(); ++it ) {
+						anim.addCell( it->first, it->second );
+					}
+					anims[animName] = anim;
+
 					// anim done
 					break;
 				} else {
@@ -157,14 +171,19 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 		}
 		++it;
 	}
+	sprite = new Sprite( renderer_, imageFile, animated );
+	GameObject* obj;
 	switch( type ) {
 	case GameObject::TYPE::PLAYER:
-		GameObject* obj = new Player();
+		obj = new Player(sprite);
 		break;
-	case GameObject::TYPE::ENEMY:
-		GameObject* obj = new Enemy();
-		break;
+//	case GameObject::TYPE::ENEMY:
+		// FIXME GameObject* obj = new Enemy();
+	default:
+		obj = nullptr;
+		assert( 0 );
 	}
+	return obj;
 }
 
 bool ObjectFactory::expect( std::string tokenA, std::string tokenB ) {

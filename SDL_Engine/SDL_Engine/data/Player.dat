@@ -1,0 +1,20 @@
+# Player Object
+
+image player.png
+animated true
+
+anim {
+	animName stand
+	frametime 0
+	sequence { 0 }
+	loop false
+	numCells 1
+	cell {
+		x 32
+		y 0
+		w 32
+		h 32
+		offsetX 0
+		offsetY 0
+	}
+}

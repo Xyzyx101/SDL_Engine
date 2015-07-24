@@ -1,6 +1,6 @@
 #pragma once
 #include "Game.h"
-#include "Sprite.h"
+#include "Player.h"
 class RPGGame :
 	public Game {
 public:
@@ -11,6 +11,7 @@ private:
 	void update( Uint32 dt );
 	void draw();
 
-	Sprite*		pTestSprite_;
+	//Sprite*		pTestSprite_;
+	GameObject*		pPlayer_;
 };
 

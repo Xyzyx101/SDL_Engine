@@ -11,6 +11,7 @@ public:
 
 private:
 	struct CellData {
+		Uint16	index;
 		Uint16	x;
 		Uint16	y;
 		Uint16	w;
