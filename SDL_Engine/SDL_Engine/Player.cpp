@@ -24,7 +24,7 @@ void Player::update( Uint32 dt ) {
 			sprite_->changeAnim( "left" );
 		}
 	}
-	pos_ += vel_ * speed_ * (float)dt;
+	pos_ += vel_ * speed_ * (float)dt * 0.001f;
 	sprite_->update( dt );
 }
 
@@ -37,7 +37,7 @@ void Player::setPos( Vec2 pos ) {
 	pos_ = pos;
 }
 
-void Player::OnKeyDown( Uint16 key ) {
+void Player::onKeyDown( Uint32 key ) {
 	switch( key ) {
 	case SDLK_LEFT:
 		vel_.x -= 1;
@@ -54,7 +54,7 @@ void Player::OnKeyDown( Uint16 key ) {
 	}
 }
 
-void Player::OnKeyUp( Uint16 key ) {
+void Player::onKeyUp( Uint32 key ) {
 	if( key==SDLK_UP||key==SDLK_DOWN ) {
 		vel_.y = 0;
 	} else if( key==SDLK_LEFT||key==SDLK_RIGHT ) {

@@ -25,7 +25,6 @@ int Game::InitSDL() {
 		SDL_Quit();
 		return 1;
 	}
-
 	window_ = SDL_CreateWindow(
 		"SDL Test Window",
 		SDL_WINDOWPOS_CENTERED,
@@ -93,15 +92,9 @@ void Game::handleEvent( const SDL_Event& e ) {
 	}
 }
 
-void Game::onKeyDown( Uint32 key ) {
-	if( key==SDLK_ESCAPE ) {
-		running_ = false;
-	}
-	
-}
+void Game::onKeyDown( Uint32 key ) {}
 
-void Game::onKeyUp( Uint32 key ) {
-}
+void Game::onKeyUp( Uint32 key ) {}
 
 
 Vec2 Game::getScreenSize() {

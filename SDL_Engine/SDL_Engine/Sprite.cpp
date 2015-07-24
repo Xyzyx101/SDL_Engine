@@ -138,10 +138,13 @@ void Sprite::draw() {
 	}
 }
 
-void Sprite::changeAnim( std::string newAnim ) {
-	drawData_.currentAnim_ = &anims_[newAnim];
-	assert( drawData_.currentAnim_!=nullptr );
-	drawData_.currentAnim_->reset();
+void Sprite::changeAnim( std::string newAnimName ) {
+	Sprite::Anim* newAnim = &anims_[newAnimName];
+	assert( newAnim!=nullptr );
+	if( drawData_.currentAnim_!=newAnim ) {
+		drawData_.currentAnim_ = &anims_[newAnimName];
+		drawData_.currentAnim_->reset();
+	}
 }
 
 void Sprite::addAnim( std::string animName, Sprite::Anim anim ) {
@@ -166,7 +169,7 @@ void Sprite::Anim::update( Uint32 dt ) {
 	currentTime_ += dt;
 	while( currentTime_>frameTime_ ) {
 		if( loop_ ) {
-			currentFrame_ = (currentFrame_+1)%sequence_.size();
+			currentFrame_ = (currentFrame_+1)%(sequence_.size()-1);
 		} else {
 			currentFrame_ = SDL_min( currentFrame_+1, (Uint16)(sequence_.size()-1) );
 		}

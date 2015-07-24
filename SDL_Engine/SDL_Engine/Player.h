@@ -11,8 +11,8 @@ public:
 	virtual void update( Uint32 dt );
 	virtual void draw();
 	virtual void setPos( Vec2 pos );
-	void OnKeyDown( Uint16 key );
-	void OnKeyUp( Uint16 key );
+	void onKeyDown( Uint32 key );
+	void onKeyUp( Uint32 key );
 	Sprite* sprite_;
 	float speed_;
 };
