@@ -1,6 +1,8 @@
 #include "RPGGame.h"
-#include<stdio.h>
+#include <stdio.h>
+#include <string>
 #include "ObjectFactory.h"
+#include "LevelLoader.h"
 
 RPGGame::RPGGame() : Game() {}
 
@@ -40,4 +42,9 @@ void RPGGame::onKeyUp( Uint32 key ) {
 		||key==SDLK_RIGHT ) {
 		static_cast<Player*>(pPlayer_)->onKeyUp( key );
 	}
+}
+
+void RPGGame::startLevel( std::string level ) {
+	LevelLoader levelLoader;
+	levelLoader.loadLevel( level );
 }
