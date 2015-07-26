@@ -14,27 +14,27 @@ Level::~Level() {
 	SDL_DestroyTexture( layer1Texture_ );
 }
 
-void Level::drawLayer0() {
+void Level::drawLayer0( Vec2 cameraOffset ) {
 	SDL_Rect src, dest;
 	src.x = 0;
 	src.y = 0;
 	src.w = screenWidth_;
 	src.h = screenHeight_;
-	dest.x = 0;
-	dest.y = 0;
+	dest.x = -cameraOffset.x;
+	dest.y = -cameraOffset.y;
 	dest.w = screenWidth_;
 	dest.h = screenHeight_;
 	SDL_RenderCopy( renderer_, layer0Texture_, &src, &dest );
 }
 
-void Level::drawLayer1() {
+void Level::drawLayer1( Vec2 cameraOffset ) {
 	SDL_Rect src, dest;
 	src.x = 0;
 	src.y = 0;
 	src.w = screenWidth_;
 	src.h = screenHeight_;
-	dest.x = 0;
-	dest.y = 0;
+	dest.x = -cameraOffset.x;
+	dest.y = -cameraOffset.y;
 	dest.w = screenWidth_;
 	dest.h = screenHeight_;
 	SDL_RenderCopy( renderer_, layer1Texture_, &src, &dest );

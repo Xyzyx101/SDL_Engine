@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "Sprite.h"
 
-Player::Player( Sprite* sprite ) : sprite_( sprite ), speed_( 150.f ) {}
+Player::Player( Sprite* sprite ) : sprite_( sprite ), speed_( 450.f ) {}
 
 Player::~Player() {
 	delete sprite_;
@@ -28,9 +28,9 @@ void Player::update( Uint32 dt ) {
 	sprite_->update( dt );
 }
 
-void Player::draw() {
+void Player::draw(Vec2 cameraOffset) {
 	sprite_->setPos( pos_ );
-	sprite_->draw();
+	sprite_->draw(cameraOffset);
 }
 
 void Player::setPos( Vec2 pos ) {

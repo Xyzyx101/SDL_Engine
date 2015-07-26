@@ -10,7 +10,7 @@ public:
 	Player( Sprite* sprite );
 	virtual ~Player();
 	virtual void update( Uint32 dt );
-	virtual void draw();
+	virtual void draw(Vec2 cameraOffset);
 	virtual void setPos( Vec2 pos );
 	virtual Vec2 getPos();
 	void onKeyDown( Uint32 key );

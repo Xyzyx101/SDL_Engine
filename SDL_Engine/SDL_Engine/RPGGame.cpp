@@ -4,8 +4,7 @@
 #include "ObjectFactory.h"
 #include "LevelLoader.h"
 
-RPGGame::RPGGame() : Game(), pPlayer_( nullptr ), level_( nullptr ) {}
-
+RPGGame::RPGGame() : Game(), pPlayer_( nullptr ), level_( nullptr ), cameraOffset_( Vec2( 0, 0 ) ) {}
 
 RPGGame::~RPGGame() {}
 
@@ -19,12 +18,14 @@ void RPGGame::loadAssets() {
 void RPGGame::update( Uint32 dt ) {
 	pPlayer_->update( dt );
 	checkPlayerBounds();
+	updateCamera();
+	//fprintf( stdout, "x: %f, y: %f\n", pPlayer_->getPos().x, pPlayer_->getPos().y );
 }
 
 void RPGGame::draw() {
-	level_->drawLayer0();
-	pPlayer_->draw();
-	level_->drawLayer1();
+	level_->drawLayer0( cameraOffset_ );
+	pPlayer_->draw( cameraOffset_ );
+	level_->drawLayer1( cameraOffset_ );
 	Game::draw();
 }
 
@@ -68,5 +69,31 @@ void RPGGame::checkPlayerBounds() {
 	} else if( pPlayer_->getBottom()>level_->getHeight() ) {
 		Vec2 newPos = Vec2( pPlayer_->getPos().x, level_->getHeight()-pPlayer_->getHalfHeight() );
 		pPlayer_->setPos( newPos );
+	}
+}
+
+void RPGGame::updateCamera() {
+	Sint16 cameraBoundx = screenWidth_/4;
+	Sint16 cameraBoundY = screenHeight_/4;
+	Vec2 playerPos = pPlayer_->getPos();
+	if( playerPos.x-cameraOffset_.x<cameraBoundx ) {
+		cameraOffset_.x = playerPos.x-cameraBoundx;
+	} else if( playerPos.x > cameraOffset_.x+screenWidth_-cameraBoundx ) {
+		cameraOffset_.x = playerPos.x-screenWidth_+cameraBoundx;
+	}
+	if( playerPos.y-cameraOffset_.y<cameraBoundY ) {
+		cameraOffset_.y = playerPos.y-cameraBoundY;
+	} else if( playerPos.y > cameraOffset_.y+screenHeight_-cameraBoundY ) {
+		cameraOffset_.y = playerPos.y-screenHeight_+cameraBoundY;
+	}
+	if( cameraOffset_.x<0 ) {
+		cameraOffset_.x = 0;
+	} else if( cameraOffset_.x + screenWidth_>level_->getWidth() ) {
+		cameraOffset_.x = level_->getWidth()-screenWidth_;
+	}
+	if( cameraOffset_.y<0 ) {
+		cameraOffset_.y = 0;
+	} else if( cameraOffset_.y+screenHeight_>level_->getHeight() ) {
+		cameraOffset_.y = level_->getHeight()-screenHeight_;
 	}
 }

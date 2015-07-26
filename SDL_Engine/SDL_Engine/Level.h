@@ -1,5 +1,6 @@
 #pragma once
 #include "SDL.h"
+#include "MathUtils.h"
 
 class Level {
 	friend class LevelLoader;
@@ -8,8 +9,8 @@ public:
 		CAVE
 	};
 	~Level();
-	void drawLayer0();
-	void drawLayer1();
+	void drawLayer0(Vec2 cameraOffset);
+	void drawLayer1( Vec2 cameraOffset );
 	Uint16 getWidth();
 	Uint16 getHeight();
 private:

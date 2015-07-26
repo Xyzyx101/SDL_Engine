@@ -1,5 +1,6 @@
 #pragma once
 #include "Game.h"
+#include "SDL.h"
 #include <string>
 #include "Player.h"
 #include "Level.h"
@@ -17,7 +18,9 @@ private:
 	void onKeyDown( Uint32 key );
 	void onKeyUp( Uint32 key );
 	void checkPlayerBounds();
+	void updateCamera();
 	Player*			pPlayer_;
 	Level*			level_;
+	Vec2			cameraOffset_;
 };
 
