@@ -151,6 +151,22 @@ void Sprite::addAnim( std::string animName, Sprite::Anim anim ) {
 	anims_[animName] = anim;
 }
 
+Sint16 Sprite::getHalfWidth() {
+	if( animated_ ) {
+		return drawData_.currentAnim_->getCurrentCell().halfW_;
+	} else {
+		return drawData_.frame_.halfW_;
+	}
+}
+
+Sint16 Sprite::getHalfHeight() {
+	if( animated_ ) {
+		return drawData_.currentAnim_->getCurrentCell().halfH_;
+	} else {
+		return drawData_.frame_.halfH_;
+	}
+}
+
 Sprite::Anim::Anim() {}
 Sprite::Anim::Anim( Uint16 numCells, std::vector<Uint16> sequence, Uint32 frameTime, bool loop ) :
 sequence_( sequence ),

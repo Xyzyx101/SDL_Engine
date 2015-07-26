@@ -37,6 +37,10 @@ void Player::setPos( Vec2 pos ) {
 	pos_ = pos;
 }
 
+Vec2 Player::getPos() {
+	return pos_;
+}
+
 void Player::onKeyDown( Uint32 key ) {
 	switch( key ) {
 	case SDLK_LEFT:
@@ -60,4 +64,28 @@ void Player::onKeyUp( Uint32 key ) {
 	} else if( key==SDLK_LEFT||key==SDLK_RIGHT ) {
 		vel_.x = 0;
 	}
+}
+
+Sint16 Player::getRight() {
+	return pos_.x+sprite_->getHalfWidth();
+}
+
+Sint16 Player::getLeft() {
+	return pos_.x-sprite_->getHalfWidth();
+}
+
+Sint16 Player::getTop() {
+	return pos_.y-getHalfHeight();
+}
+
+Sint16 Player::getBottom() {
+	return pos_.y+getHalfHeight();
+}
+
+Sint16 Player::getHalfWidth() {
+	return sprite_->getHalfWidth();
+}
+
+Sint16 Player::getHalfHeight() {
+	return sprite_->getHalfHeight();
 }

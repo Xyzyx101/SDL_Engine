@@ -1,18 +1,27 @@
 #pragma once
 #include "GameObject.h"
+#include "MathUtils.h"
 
 class Sprite;
 
 class Player :
 	public GameObject {
 public:
-	Player(Sprite* sprite);
+	Player( Sprite* sprite );
 	virtual ~Player();
 	virtual void update( Uint32 dt );
 	virtual void draw();
 	virtual void setPos( Vec2 pos );
+	virtual Vec2 getPos();
 	void onKeyDown( Uint32 key );
 	void onKeyUp( Uint32 key );
-	Sprite* sprite_;
-	float speed_;
+	Sint16 getRight();
+	Sint16 getLeft();
+	Sint16 getTop();
+	Sint16 getBottom();
+	Sint16 getHalfWidth();
+	Sint16 getHalfHeight();
+private:
+	Sprite*		sprite_;
+	float		speed_;
 };

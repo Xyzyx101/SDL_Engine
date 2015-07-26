@@ -61,7 +61,7 @@ Level* LevelLoader::loadLevel( Level::LEVEL level ) {
 	}
 
 	SDL_DestroyTexture( tileTexture );
-	Level* newLevel = new Level( renderer_, screenWidth_, screenHeight_, layerTextures["layer0"], layerTextures["layer1"] );
+	Level* newLevel = new Level( renderer_, width * tileWidth, height * tileHeight, screenWidth_, screenHeight_, layerTextures["layer0"], layerTextures["layer1"] );
 	return newLevel;
 }
 

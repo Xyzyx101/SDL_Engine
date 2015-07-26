@@ -3,6 +3,7 @@
 #include <string>
 #include "Player.h"
 #include "Level.h"
+
 class RPGGame :
 	public Game {
 public:
@@ -15,7 +16,8 @@ private:
 	void draw();
 	void onKeyDown( Uint32 key );
 	void onKeyUp( Uint32 key );
-	GameObject*		pPlayer_;
+	void checkPlayerBounds();
+	Player*			pPlayer_;
 	Level*			level_;
 };
 

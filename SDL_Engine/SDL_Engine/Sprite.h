@@ -73,7 +73,8 @@ public:
 	void update( Uint32 dt );
 	void addAnim( std::string animName, Anim anim );
 	void changeAnim( std::string newAnim );
-
+	Sint16 getHalfWidth();
+	Sint16 getHalfHeight();
 private:
 	int loadImage( char* filename );
 	SDL_Renderer*					pRenderer_;

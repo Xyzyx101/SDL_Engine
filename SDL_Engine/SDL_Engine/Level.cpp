@@ -1,7 +1,9 @@
 #include "Level.h"
 
-Level::Level( SDL_Renderer* renderer, Uint16 screenWidth, Uint16 screenHeight, SDL_Texture* layer0Texture, SDL_Texture* layer1Texture ) :
+Level::Level( SDL_Renderer* renderer, Uint16 width, Uint16 height, Uint16 screenWidth, Uint16 screenHeight, SDL_Texture* layer0Texture, SDL_Texture* layer1Texture ) :
 renderer_( renderer ),
+width_( width ),
+height_( height ),
 screenWidth_( screenWidth ),
 screenHeight_( screenHeight ),
 layer0Texture_( layer0Texture ),
@@ -26,5 +28,22 @@ void Level::drawLayer0() {
 }
 
 void Level::drawLayer1() {
-	SDL_RenderCopy( renderer_, layer1Texture_, NULL, NULL );
+	SDL_Rect src, dest;
+	src.x = 0;
+	src.y = 0;
+	src.w = screenWidth_;
+	src.h = screenHeight_;
+	dest.x = 0;
+	dest.y = 0;
+	dest.w = screenWidth_;
+	dest.h = screenHeight_;
+	SDL_RenderCopy( renderer_, layer1Texture_, &src, &dest );
+}
+
+Uint16 Level::getWidth() {
+	return width_;
+}
+
+Uint16 Level::getHeight() {
+	return height_;
 }
