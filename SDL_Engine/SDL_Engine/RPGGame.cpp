@@ -4,7 +4,7 @@
 #include "ObjectFactory.h"
 #include "LevelLoader.h"
 
-RPGGame::RPGGame() : Game() {}
+RPGGame::RPGGame() : Game(), pPlayer_(nullptr), level_(nullptr) {}
 
 
 RPGGame::~RPGGame() {}
@@ -12,6 +12,7 @@ RPGGame::~RPGGame() {}
 void RPGGame::loadAssets() {
 	ObjectFactory::Init( renderer_ );
 	pPlayer_ = ObjectFactory::Instantiate( GameObject::PLAYER, getScreenSize() * 0.5f );
+	startLevel( Level::CAVE );
 }
 
 void RPGGame::update( Uint32 dt ) {
@@ -19,7 +20,9 @@ void RPGGame::update( Uint32 dt ) {
 }
 
 void RPGGame::draw() {
+	level_->drawLayer0();
 	pPlayer_->draw();
+	level_->drawLayer1();
 	Game::draw();
 }
 
@@ -44,7 +47,7 @@ void RPGGame::onKeyUp( Uint32 key ) {
 	}
 }
 
-void RPGGame::startLevel( std::string level ) {
-	LevelLoader levelLoader;
-	levelLoader.loadLevel( level );
+void RPGGame::startLevel( Level::LEVEL level ) {
+	LevelLoader levelLoader(renderer_, screenWidth_, screenHeight_);
+	level_ = levelLoader.loadLevel( level );
 }

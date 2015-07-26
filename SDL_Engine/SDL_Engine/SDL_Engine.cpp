@@ -28,7 +28,6 @@ int main(int argc, char* argv[]) {
 	if (err != 0) {
 		return err;
 	}
-	g.startLevel( "CaveTest.lvl" );
 	g.Run();
 	g.Clean();
 	return 0;
