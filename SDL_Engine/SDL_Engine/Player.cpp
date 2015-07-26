@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "Sprite.h"
 
-Player::Player( Sprite* sprite ) : sprite_( sprite ), speed_( 450.f ) {}
+Player::Player( Sprite* sprite ) : sprite_( sprite ), speed_( 150.f ) {}
 
 Player::~Player() {
 	delete sprite_;
@@ -88,4 +88,9 @@ Sint16 Player::getHalfWidth() {
 
 Sint16 Player::getHalfHeight() {
 	return sprite_->getHalfHeight();
+}
+
+void Player::respondLevelCollision( Vec2 collision ) {
+	pos_ += collision;
+	vel_ = Vec2::Zero;
 }

@@ -1,13 +1,14 @@
 #include "Level.h"
+#include "Collision.h"
 
-Level::Level( SDL_Renderer* renderer, Uint16 width, Uint16 height, Uint16 screenWidth, Uint16 screenHeight, SDL_Texture* layer0Texture, SDL_Texture* layer1Texture ) :
+Level::Level( SDL_Renderer* renderer, Uint16 width, Uint16 height, Uint16 screenWidth, Uint16 screenHeight, Uint16 tileWidth, Uint16 tileHeight ) :
 renderer_( renderer ),
 width_( width ),
 height_( height ),
 screenWidth_( screenWidth ),
 screenHeight_( screenHeight ),
-layer0Texture_( layer0Texture ),
-layer1Texture_( layer1Texture ) {}
+tileWidth_( tileHeight ),
+tileHeight_( tileHeight ) {}
 
 Level::~Level() {
 	SDL_DestroyTexture( layer0Texture_ );
@@ -46,4 +47,21 @@ Uint16 Level::getWidth() {
 
 Uint16 Level::getHeight() {
 	return height_;
+}
+
+Vec2 Level::checkCollision( Vec2 pos, Sint32 halfWidth, Sint32 halfHeight ) {
+	Vec2 collision = Vec2();
+	Sint16 firstX = ((Sint16)pos.x-halfWidth)/tileWidth_*tileWidth_; //multiply and divide quantizes the pos to the tile size
+	Sint16 lastX = ((Sint16)pos.x+halfWidth)/tileWidth_*tileWidth_;
+	Sint16 firstY = ((Sint16)pos.y-halfHeight)/tileHeight_*tileHeight_;
+	Sint16 lastY = ((Sint16)pos.y+halfHeight)/tileHeight_*tileHeight_;
+	for( auto rowIt = collisionLayer_.lower_bound( firstY ); rowIt!=collisionLayer_.upper_bound( lastY ); ++rowIt ) {
+		for( auto colIt = rowIt->second.lower_bound( firstX ); colIt!=rowIt->second.upper_bound( lastX ); ++colIt ) {
+			collision = Collision::RectToRectCollision( pos, halfWidth*2, halfHeight*2, Vec2( (*colIt)+tileHeight_/2, rowIt->first+tileWidth_/2 ), tileWidth_, tileHeight_ );
+			if( collision!=Vec2::Zero ) {
+				return collision;
+			}
+		}
+	}
+	return collision;
 }

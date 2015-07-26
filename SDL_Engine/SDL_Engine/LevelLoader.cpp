@@ -7,7 +7,7 @@
 #include "Level.h"
 #include <assert.h>
 
-LevelLoader::LevelLoader( SDL_Renderer* renderer, Uint16 screenWidth, Uint16 screenHeight ) : renderer_( renderer ), screenWidth_(screenWidth), screenHeight_(screenHeight) {}
+LevelLoader::LevelLoader( SDL_Renderer* renderer, Uint16 screenWidth, Uint16 screenHeight ) : renderer_( renderer ), screenWidth_( screenWidth ), screenHeight_( screenHeight ) {}
 
 LevelLoader::~LevelLoader() {}
 
@@ -20,7 +20,7 @@ Level* LevelLoader::loadLevel( Level::LEVEL level ) {
 #endif
 	switch( level ) {
 	case Level::LEVEL::CAVE:
-		filename = "CaveTest.lvl";
+		filename = "Cave.lvl";
 		tilemapName = "cave.png";
 		break;
 	default:
@@ -53,15 +53,21 @@ Level* LevelLoader::loadLevel( Level::LEVEL level ) {
 		int dataIdx = 0;
 		auto it = layerData.begin();
 		while( it!=layerData.end() ) {
-			data.push_back((*it++).asInt());
+			data.push_back( (*it++).asInt() );
 		}
 		std::string layerName = layers[idx]["name"].asString();
+		if( layerName=="collision" ) {
+			createCollisionLayer( data, width, height, tileWidth, tileHeight );
+		}
 		SDL_Texture* layerTexture = createLayerTexture( tileTexture, data, width, height, tileWidth, tileHeight, imageWidth, imageHeight );
 		layerTextures[layerName] = layerTexture;
 	}
 
 	SDL_DestroyTexture( tileTexture );
-	Level* newLevel = new Level( renderer_, width * tileWidth, height * tileHeight, screenWidth_, screenHeight_, layerTextures["layer0"], layerTextures["layer1"] );
+	Level* newLevel = new Level( renderer_, width * tileWidth, height * tileHeight, screenWidth_, screenHeight_, tileWidth, tileHeight );
+	newLevel->layer0Texture_ = layerTextures["layer0"];
+	newLevel->layer1Texture_ = layerTextures["layer1"];
+	newLevel->collisionLayer_ = collisionLayer_;
 	return newLevel;
 }
 
@@ -106,3 +112,17 @@ SDL_Texture* LevelLoader::createLayerTexture( SDL_Texture* tileTex, std::vector<
 	return layerTexture;
 }
 
+void LevelLoader::createCollisionLayer( std::vector<int> data, int levelWidth, int levelHeight, int tileWidth, int tileHeight ) {
+	int destIdx = 0;
+	for( auto it = data.begin(); it!=data.end(); ++it ) {
+		if( *it==0 ) { ++destIdx; continue; }
+		Uint16 x = destIdx%levelWidth * tileWidth;
+		Uint16 y = destIdx/levelWidth * tileHeight;
+		auto rowMapIter = collisionLayer_.find( y );
+		if( rowMapIter==collisionLayer_.end() ) {
+			collisionLayer_.emplace( y, std::set<Uint16>() );
+		}
+		collisionLayer_[y].insert( x );
+		++destIdx;
+	}
+}

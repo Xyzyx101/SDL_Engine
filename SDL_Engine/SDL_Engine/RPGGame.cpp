@@ -18,6 +18,10 @@ void RPGGame::loadAssets() {
 void RPGGame::update( Uint32 dt ) {
 	pPlayer_->update( dt );
 	checkPlayerBounds();
+	Vec2 playerCollision = level_->checkCollision( pPlayer_->getPos(), pPlayer_->getHalfWidth(), pPlayer_->getHalfHeight() );
+	if( playerCollision!=Vec2::Zero ) {
+		pPlayer_->respondLevelCollision(playerCollision);
+	}
 	updateCamera();
 	//fprintf( stdout, "x: %f, y: %f\n", pPlayer_->getPos().x, pPlayer_->getPos().y );
 }

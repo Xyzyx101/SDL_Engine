@@ -21,6 +21,7 @@ public:
 	Sint16 getBottom();
 	Sint16 getHalfWidth();
 	Sint16 getHalfHeight();
+	void respondLevelCollision( Vec2 collision );
 private:
 	Sprite*		sprite_;
 	float		speed_;
