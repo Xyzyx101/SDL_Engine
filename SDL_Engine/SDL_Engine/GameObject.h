@@ -8,7 +8,8 @@ class GameObject {
 public:
 	enum TYPE {
 		PLAYER,
-		SKELETON
+		SKELETON,
+		FIREBALL
 	};
 	GameObject( Sprite* sprite );
 	virtual ~GameObject();

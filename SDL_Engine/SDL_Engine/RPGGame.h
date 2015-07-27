@@ -19,11 +19,13 @@ private:
 	void draw();
 	void onKeyDown( Uint32 key );
 	void onKeyUp( Uint32 key );
+	void onMouseDown( Vec2 coords );
 	void checkPlayerBounds();
 	void updateCamera();
 	void removeDeadObjects();
 	Player*						pPlayer_;
 	std::vector<GameObject*>	enemies_;
+	std::vector<GameObject*>	spells_;
 	std::vector<Spawner*>		spawners_;
 	Level*						level_;
 	Vec2						cameraOffset_;

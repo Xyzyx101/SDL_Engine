@@ -61,7 +61,7 @@ void Game::Run() {
 		currentTime = SDL_GetTicks();
 		dt = currentTime-lastTime;
 		lastTime = currentTime;
-
+		fprintf( stdout, "dt:%u\n", dt );
 		//clear renderer
 		SDL_SetRenderDrawColor( renderer_, CLEAR_COLOR_R, CLEAR_COLOR_G, CLEAR_COLOR_B, 255 );
 		SDL_RenderClear( renderer_ );
@@ -89,6 +89,11 @@ void Game::handleEvent( const SDL_Event& e ) {
 	case SDL_KEYUP:
 		onKeyUp( e.key.keysym.sym );
 		break;
+	case SDL_MOUSEBUTTONDOWN:
+		int x, y;
+		SDL_GetMouseState( &x, &y );
+		onMouseDown(Vec2(x,y));
+		break;
 	}
 }
 
@@ -96,6 +101,7 @@ void Game::onKeyDown( Uint32 key ) {}
 
 void Game::onKeyUp( Uint32 key ) {}
 
+void Game::onMouseDown( Vec2 coords ) {}
 
 Vec2 Game::getScreenSize() {
 	return Vec2( screenWidth_, screenHeight_ );

@@ -1,0 +1,190 @@
+# Fireball Object
+
+image Fireball.png
+animated true
+
+anim {
+	animName shoot
+	frameTime 100
+	sequence { 0 1 2 }
+	loop false
+	numCells 3
+	cell {
+		index 0
+		x 0
+		y 0
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 1
+		x 16
+		y 0
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 2
+		x 32
+		y 0
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+}
+
+anim {
+	animName fly
+	frameTime 100
+	sequence { 0 1 2 3 }
+	loop true
+	numCells 4
+	cell {
+		index 0
+		x 48
+		y 0
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 1
+		x 64
+		y 0
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 2
+		x 80
+		y 0
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 3
+		x 0
+		y 16
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+}
+
+anim {
+	animName explode
+	frameTime 75
+	sequence { 0 1 2 3 4 5 6 7 8 9 10 }
+	loop false
+	numCells 11
+	cell {
+		index 0
+		x 16
+		y 16
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 1
+		x 32
+		y 16
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 2
+		x 48
+		y 16
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 3
+		x 64
+		y 16
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 4
+		x 80
+		y 16
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 5
+		x 0
+		y 32
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 6
+		x 16
+		y 32
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 7
+		x 32
+		y 32
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 8
+		x 48
+		y 32
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 9
+		x 64
+		y 32
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+	cell {
+		index 10
+		x 80
+		y 32
+		w 16
+		h 16
+		offsetX 0
+		offsetY 0
+	}
+}

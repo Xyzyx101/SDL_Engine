@@ -138,6 +138,29 @@ void Sprite::draw( Vec2 cameraOffset ) {
 	}
 }
 
+void Sprite::drawAngle( Vec2 cameraOffset, float angle ) {
+	SDL_Rect dest;
+	if( animated_ ) {
+		Sprite::Anim::Cell cell = drawData_.currentAnim_->getCurrentCell();
+		SDL_Rect src;
+		src.x = (Sint16)cell.x_+cell.offsetX_;
+		src.y = (Sint16)cell.y_+cell.offsetY_;
+		src.w = (Sint16)cell.w_;
+		src.h = (Sint16)cell.h_;
+		dest.x = (Sint16)pos_.x-cell.halfW_-cameraOffset.x;
+		dest.y = (Sint16)pos_.y-cell.halfH_-cameraOffset.y;
+		dest.w = (Sint16)cell.w_;
+		dest.h = (Sint16)cell.h_;
+		SDL_RenderCopyEx( pRenderer_, pImage_, &src, &dest , angle, NULL, SDL_FLIP_NONE);
+	} else {
+		dest.x = (Sint16)pos_.x-drawData_.frame_.halfW_-cameraOffset.x;
+		dest.y = (Sint16)pos_.y-drawData_.frame_.halfH_-cameraOffset.y;
+		dest.w = drawData_.frame_.w_;
+		dest.h = drawData_.frame_.h_;
+		SDL_RenderCopyEx( pRenderer_, pImage_, NULL, &dest, angle, NULL, SDL_FLIP_NONE );
+	}
+}
+
 void Sprite::changeAnim( std::string newAnimName ) {
 	Sprite::Anim* newAnim = &anims_[newAnimName];
 	assert( newAnim!=nullptr );

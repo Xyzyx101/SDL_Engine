@@ -70,6 +70,7 @@ public:
 	Uint8 getAlpha();
 	void setAlpha( const Uint8 alpha );
 	void draw(Vec2 cameraOffset);
+	void drawAngle( Vec2 cameraOffset, float angle );
 	void update( Uint32 dt );
 	void addAnim( std::string animName, Anim anim );
 	void changeAnim( std::string newAnim );

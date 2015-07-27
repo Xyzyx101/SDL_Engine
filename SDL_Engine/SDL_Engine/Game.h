@@ -15,6 +15,7 @@ protected:
 	virtual void draw();
 	virtual void onKeyDown( Uint32 key );
 	virtual void onKeyUp( Uint32 key );
+	virtual void onMouseDown( Vec2 coords );
 	virtual void loadAssets() = 0;
 	virtual void update( Uint32 dt ) = 0;
 	Vec2 getScreenSize();

@@ -4,6 +4,7 @@
 #include "ObjectFactory.h"
 #include "LevelLoader.h"
 #include "Collision.h"
+#include "Fireball.h"
 
 RPGGame::RPGGame() : Game(), pPlayer_( nullptr ), level_( nullptr ), cameraOffset_( Vec2( 0, 0 ) ) {}
 
@@ -45,7 +46,21 @@ void RPGGame::update( Uint32 dt ) {
 			pPlayer_->respondEnemyCollision();
 		}
 	}
-
+	Vec2 spellCollision;
+	for( auto spell:spells_ ) {
+		spell->update( dt );
+		spellCollision = level_->checkCollision( spell->getPos(), spell->getHalfWidth(), spell->getHalfHeight() );
+		if( spellCollision!=Vec2::Zero ) {
+			spell->respondLevelCollision( spellCollision );
+		}
+		for( auto enemy:enemies_ ) {
+			enemyCollision = Collision::RectToRectCollision( spell->getPos(), spell->getHalfWidth(), spell->getHalfHeight(), enemy->getPos(), enemy->getHalfWidth(), enemy->getHalfHeight() );
+			if( enemyCollision!=Vec2::Zero ) {
+				spell->respondLevelCollision( Vec2::Zero );
+				enemy->dead_ = true;
+			}
+		}
+	}
 	// Pixel Collision will never work on sdl 2.0 because you cannot read from textures reliably
 	//auto obj1 = ( GameObject* )pPlayer_;
 	//auto obj2 = enemies_[0];
@@ -61,6 +76,9 @@ void RPGGame::draw() {
 	pPlayer_->draw( cameraOffset_ );
 	for( auto enemy:enemies_ ) {
 		enemy->draw( cameraOffset_ );
+	}
+	for( auto spell:spells_ ) {
+		spell->draw( cameraOffset_ );
 	}
 	level_->drawLayer1( cameraOffset_ );
 	Game::draw();
@@ -85,6 +103,15 @@ void RPGGame::onKeyUp( Uint32 key ) {
 		||key==SDLK_d ) {
 		pPlayer_->onKeyUp( key );
 	}
+}
+
+void RPGGame::onMouseDown( Vec2 coords ) {
+	coords = coords+cameraOffset_;
+	fprintf( stdout, "mouse test  x: %f y: %f\n", coords.x, coords.y );
+	Fireball* fireball = (Fireball*)ObjectFactory::Instantiate( GameObject::FIREBALL, pPlayer_->getPos() );
+	Vec2 direction = coords-pPlayer_->getPos();
+	fireball->setVel( direction );
+	spells_.push_back( fireball );
 }
 
 void RPGGame::startLevel( Level::LEVEL level ) {
@@ -143,6 +170,14 @@ void RPGGame::removeDeadObjects() {
 		if( (*it)->dead_ ) {
 			delete * it;
 			it = enemies_.erase( it );
+		} else {
+			++it;
+		}
+	}
+	for( auto it = spells_.begin(); it!=spells_.end(); ) {
+		if( (*it)->dead_ ) {
+			delete * it;
+			it = spells_.erase( it );
 		} else {
 			++it;
 		}

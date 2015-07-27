@@ -7,6 +7,7 @@
 #include <assert.h>
 #include "Player.h"
 #include "Skeleton.h"
+#include "Fireball.h"
 #include "Sprite.h"
 
 ObjectFactory::ObjectFactory() {}
@@ -38,6 +39,9 @@ void ObjectFactory::loadData( GameObject::TYPE type ) {
 		break;
 	case GameObject::TYPE::SKELETON:
 		loadFile( type, "Skeleton.dat" );
+		break;
+	case GameObject::TYPE::FIREBALL:
+		loadFile( type, "Fireball.dat" );
 		break;
 	default:
 		fprintf( stderr, "Unknown GameObject::Type %d", type );
@@ -188,6 +192,9 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 		break;
 	case GameObject::TYPE::SKELETON:
 		obj = new Skeleton( sprite, player_ );
+		break;
+	case GameObject::TYPE::FIREBALL:
+		obj = new Fireball( sprite );
 		break;
 	default:
 		obj = nullptr;
