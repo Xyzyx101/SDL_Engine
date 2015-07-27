@@ -61,7 +61,9 @@ void Game::Run() {
 		currentTime = SDL_GetTicks();
 		dt = currentTime-lastTime;
 		lastTime = currentTime;
-		fprintf( stdout, "dt:%u\n", dt );
+		
+		//fprintf( stdout, "dt:%u\n", dt );
+		
 		//clear renderer
 		SDL_SetRenderDrawColor( renderer_, CLEAR_COLOR_R, CLEAR_COLOR_G, CLEAR_COLOR_B, 255 );
 		SDL_RenderClear( renderer_ );

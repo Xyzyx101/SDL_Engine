@@ -20,6 +20,6 @@ private:
 	SDL_Renderer*						renderer_;
 	Uint16								screenWidth_;
 	Uint16								screenHeight_;
-	std::map<Uint16, std::set<Uint16>>	collisionLayer_;
+	std::map<Sint32, std::set<Sint32>>	collisionLayer_;
 };
 

@@ -116,11 +116,11 @@ void LevelLoader::createCollisionLayer( std::vector<int> data, int levelWidth, i
 	int destIdx = 0;
 	for( auto it = data.begin(); it!=data.end(); ++it ) {
 		if( *it==0 ) { ++destIdx; continue; }
-		Uint16 x = destIdx%levelWidth * tileWidth;
-		Uint16 y = destIdx/levelWidth * tileHeight;
+		Sint32 x = destIdx%levelWidth * tileWidth;
+		Sint32 y = destIdx/levelWidth * tileHeight;
 		auto rowMapIter = collisionLayer_.find( y );
 		if( rowMapIter==collisionLayer_.end() ) {
-			collisionLayer_.emplace( y, std::set<Uint16>() );
+			collisionLayer_.emplace( y, std::set<Sint32>() );
 		}
 		collisionLayer_[y].insert( x );
 		++destIdx;

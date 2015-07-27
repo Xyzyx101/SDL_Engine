@@ -21,7 +21,7 @@ private:
 	SDL_Renderer*						renderer_;
 	SDL_Texture*						layer0Texture_;
 	SDL_Texture*						layer1Texture_;
-	std::map<Uint16, std::set<Uint16>>	collisionLayer_;
+	std::map<Sint32, std::set<Sint32>>	collisionLayer_;
 	int	fuckYouIdiot;
 	Uint16								width_;
 	Uint16								height_;
