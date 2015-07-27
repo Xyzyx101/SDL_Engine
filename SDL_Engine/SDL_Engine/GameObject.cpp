@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "Sprite.h"
 
-GameObject::GameObject(Sprite* sprite) : sprite_(sprite), dead_(false) {}
+GameObject::GameObject(Sprite* sprite, TYPE type) : sprite_(sprite), type_(type), dead_(false) {}
 
 GameObject::~GameObject() {}
 
@@ -37,6 +37,9 @@ Sint16 GameObject::getHalfHeight() {
 	return sprite_->getHalfHeight();
 }
 
+GameObject::TYPE GameObject::getType() {
+	return type_;
+}
 SDL_Texture* GameObject::getTextureOverlap( Sint16  left, Sint16  right, Sint16  top, Sint16  bottom ) {
 	return sprite_->getTextureOverlap( left, right, top, bottom );
 }

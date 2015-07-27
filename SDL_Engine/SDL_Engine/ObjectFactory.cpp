@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Skeleton.h"
 #include "Fireball.h"
+#include "Treasure.h"
 #include "Sprite.h"
 
 ObjectFactory::ObjectFactory() {}
@@ -42,6 +43,9 @@ void ObjectFactory::loadData( GameObject::TYPE type ) {
 		break;
 	case GameObject::TYPE::FIREBALL:
 		loadFile( type, "Fireball.dat" );
+		break;
+	case GameObject::TYPE::TREASURE:
+		loadFile( type, "Treasure.dat" );
 		break;
 	default:
 		fprintf( stderr, "Unknown GameObject::Type %d", type );
@@ -195,6 +199,9 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 		break;
 	case GameObject::TYPE::FIREBALL:
 		obj = new Fireball( sprite );
+		break;
+	case GameObject::TYPE::TREASURE:
+		obj = new Treasure( sprite );
 		break;
 	default:
 		obj = nullptr;

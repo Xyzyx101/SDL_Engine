@@ -7,7 +7,7 @@
 #include "Fireball.h"
 #include <string>
 
-RPGGame::RPGGame() : Game(), pPlayer_( nullptr ), level_( nullptr ), pHudFont_(nullptr), pHudTexture_(nullptr), cameraOffset_( Vec2( 0, 0 ) ) {}
+RPGGame::RPGGame() : Game(), pPlayer_( nullptr ), level_( nullptr ), pHudFont_( nullptr ), pHudTexture_( nullptr ), cameraOffset_( Vec2( 0, 0 ) ) {}
 
 RPGGame::~RPGGame() {}
 
@@ -16,7 +16,7 @@ void RPGGame::loadAssets() {
 	GameObject* playerObject = ObjectFactory::Instantiate( GameObject::PLAYER, getScreenSize() * 0.35f );
 	pPlayer_ = static_cast<Player*>(playerObject);
 	ObjectFactory::setPlayer( pPlayer_ );
-	spawners_.push_back( new Spawner( GameObject::SKELETON, getScreenSize() * 0.5f, 3000, 8000 ) );
+	
 	//enemies_.push_back( ObjectFactory::Instantiate( GameObject::SKELETON, getScreenSize() * 0.5f ) );
 	pHudFont_ = TTF_OpenFont( "MysteryQuest-Regular.ttf", 108 );
 	if( pHudFont_==NULL ) {
@@ -24,6 +24,8 @@ void RPGGame::loadAssets() {
 	}
 	updateHud();
 	startLevel( Level::CAVE );
+	spawners_.push_back( new Spawner( GameObject::SKELETON, getScreenSize() * 0.5f, 3000, 8000 ) );
+	spawners_.push_back( new Spawner( GameObject::TREASURE, Vec2::Zero, 3000, 5000, true, level_->getWidth(), level_->getHeight() ) );
 }
 
 void RPGGame::update( Uint32 dt ) {
@@ -48,7 +50,13 @@ void RPGGame::update( Uint32 dt ) {
 		}
 		enemyCollision = Collision::RectToRectCollision( enemy->getPos(), enemy->getHalfWidth(), enemy->getHalfHeight(), pPlayer_->getPos(), pPlayer_->getHalfWidth(), pPlayer_->getHalfHeight() );
 		if( enemyCollision!=Vec2::Zero ) {
-			pPlayer_->respondEnemyCollision();
+			if( enemy->getType()==GameObject::TYPE::TREASURE ) {
+				gold_ += 1000;
+				updateHud();
+				enemy->dead_ = true;
+			} else {
+				pPlayer_->respondEnemyCollision();
+			}
 		}
 	}
 	Vec2 spellCollision;

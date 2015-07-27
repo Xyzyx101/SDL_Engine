@@ -107,6 +107,7 @@ xcopy /y "..\..\SDL2_image-2.0.0\VisualC\external\lib\x86\*.dll" "$(ProjectDir)"
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Treasure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
@@ -122,6 +123,7 @@ xcopy /y "..\..\SDL2_image-2.0.0\VisualC\external\lib\x86\*.dll" "$(ProjectDir)"
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="Spawner.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Treasure.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Player.dat" />

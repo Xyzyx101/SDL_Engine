@@ -9,9 +9,10 @@ public:
 	enum TYPE {
 		PLAYER,
 		SKELETON,
-		FIREBALL
+		FIREBALL,
+		TREASURE
 	};
-	GameObject( Sprite* sprite );
+	GameObject( Sprite* sprite , TYPE type);
 	virtual ~GameObject();
 	void setPos( Vec2 pos );
 	Vec2 getPos();
@@ -21,6 +22,7 @@ public:
 	Sint16 getBottom();
 	Sint16 getHalfWidth();
 	Sint16 getHalfHeight();
+	TYPE getType();
 	SDL_Texture* getTextureOverlap( Sint16  left, Sint16  right, Sint16  top, Sint16  bottom );
 	virtual void update( Uint32 dt ) = 0;
 	virtual void draw( Vec2 cameraOffset ) = 0;
@@ -30,5 +32,6 @@ protected:
 	Vec2		vel_;
 	Vec2		pos_;
 	Sprite*		sprite_;
+	TYPE		type_;
 };
 

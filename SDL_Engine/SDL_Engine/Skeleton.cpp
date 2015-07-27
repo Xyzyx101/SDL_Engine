@@ -2,7 +2,7 @@
 #include "Sprite.h"
 #include "Player.h"
 
-Skeleton::Skeleton( Sprite* sprite, Player* player ) : GameObject( sprite ), player_(player), speed_( 100.f ), thinkDelay_( 1000 ) {
+Skeleton::Skeleton( Sprite* sprite, Player* player ) : GameObject( sprite, GameObject::TYPE::SKELETON ), player_(player), speed_( 100.f ), thinkDelay_( 1000 ) {
 	lastThink_ = SDL_GetTicks();
 }
 

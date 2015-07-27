@@ -15,6 +15,8 @@ public:
 	void drawLayer1( Vec2 cameraOffset );
 	Uint16 getWidth();
 	Uint16 getHeight();
+	Uint16 getTileWidth();
+	Uint16 getTileHeight();
 	Vec2 checkCollision( Vec2 pos, Sint32 halfWidth, Sint32 halfHeight );
 private:
 	Level( SDL_Renderer* renderer, Uint16 width, Uint16 height, Uint16 screenWidth, Uint16 screenHeight, Uint16 tileWidth, Uint16 tileHeight );

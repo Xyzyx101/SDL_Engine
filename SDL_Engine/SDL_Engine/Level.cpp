@@ -49,6 +49,14 @@ Uint16 Level::getHeight() {
 	return height_;
 }
 
+Uint16 Level::getTileWidth() {
+	return tileWidth_;
+}
+
+Uint16 Level::getTileHeight() {
+	return tileHeight_;
+}
+
 Vec2 Level::checkCollision( Vec2 pos, Sint32 halfWidth, Sint32 halfHeight ) {
 	Vec2 collision = Vec2();
 	Sint16 firstX = ((Sint16)pos.x-halfWidth)/tileWidth_*tileWidth_; //multiply and divide quantizes the pos to the tile size

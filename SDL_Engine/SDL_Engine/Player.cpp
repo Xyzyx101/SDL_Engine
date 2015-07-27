@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "Sprite.h"
 
-Player::Player( Sprite* sprite ) : GameObject( sprite ), speed_( 150.f ) {}
+Player::Player( Sprite* sprite ) : GameObject( sprite, GameObject::TYPE::PLAYER ), speed_( 150.f ) {}
 
 Player::~Player() {
 	delete sprite_;
