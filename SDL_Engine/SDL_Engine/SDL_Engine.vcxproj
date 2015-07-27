@@ -103,6 +103,7 @@ xcopy /y "..\..\SDL2_image-2.0.0\VisualC\external\lib\x86\*.dll" "$(ProjectDir)"
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RPGGame.cpp" />
     <ClCompile Include="SDL_Engine.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +116,7 @@ xcopy /y "..\..\SDL2_image-2.0.0\VisualC\external\lib\x86\*.dll" "$(ProjectDir)"
     <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RPGGame.h" />
+    <ClInclude Include="Skeleton.h" />
     <ClInclude Include="Sprite.h" />
   </ItemGroup>
   <ItemGroup>

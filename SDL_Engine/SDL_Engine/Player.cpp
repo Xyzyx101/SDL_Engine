@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "Sprite.h"
 
-Player::Player( Sprite* sprite ) : sprite_( sprite ), speed_( 150.f ) {}
+Player::Player( Sprite* sprite ) : GameObject( sprite ), speed_( 150.f ) {}
 
 Player::~Player() {
 	delete sprite_;
@@ -25,6 +25,7 @@ void Player::update( Uint32 dt ) {
 		}
 	}
 	pos_ += vel_ * speed_ * (float)dt * 0.001f;
+	fprintf( stdout, "x: %f  y: %f\n", pos_.x, pos_.y );
 	sprite_->update( dt );
 }
 
@@ -33,13 +34,7 @@ void Player::draw(Vec2 cameraOffset) {
 	sprite_->draw(cameraOffset);
 }
 
-void Player::setPos( Vec2 pos ) {
-	pos_ = pos;
-}
 
-Vec2 Player::getPos() {
-	return pos_;
-}
 
 void Player::onKeyDown( Uint32 key ) {
 	switch( key ) {
@@ -64,30 +59,6 @@ void Player::onKeyUp( Uint32 key ) {
 	} else if( key==SDLK_LEFT||key==SDLK_RIGHT ) {
 		vel_.x = 0;
 	}
-}
-
-Sint16 Player::getRight() {
-	return pos_.x+sprite_->getHalfWidth();
-}
-
-Sint16 Player::getLeft() {
-	return pos_.x-sprite_->getHalfWidth();
-}
-
-Sint16 Player::getTop() {
-	return pos_.y-getHalfHeight();
-}
-
-Sint16 Player::getBottom() {
-	return pos_.y+getHalfHeight();
-}
-
-Sint16 Player::getHalfWidth() {
-	return sprite_->getHalfWidth();
-}
-
-Sint16 Player::getHalfHeight() {
-	return sprite_->getHalfHeight();
 }
 
 void Player::respondLevelCollision( Vec2 collision ) {

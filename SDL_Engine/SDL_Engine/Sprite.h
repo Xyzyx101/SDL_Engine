@@ -75,6 +75,7 @@ public:
 	void changeAnim( std::string newAnim );
 	Sint16 getHalfWidth();
 	Sint16 getHalfHeight();
+	SDL_Texture* getTextureOverlap( Sint16  left, Sint16  right, Sint16  top, Sint16  bottom );
 private:
 	int loadImage( char* filename );
 	SDL_Renderer*					pRenderer_;

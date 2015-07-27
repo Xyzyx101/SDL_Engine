@@ -6,6 +6,7 @@
 #include <cctype>
 #include <assert.h>
 #include "Player.h"
+#include "Skeleton.h"
 #include "Sprite.h"
 
 ObjectFactory::ObjectFactory() {}
@@ -15,6 +16,10 @@ ObjectFactory* ObjectFactory::instance_ = new ObjectFactory();
 
 void ObjectFactory::Init( SDL_Renderer* renderer ) {
 	ObjectFactory::instance_->renderer_ = renderer;
+}
+
+void ObjectFactory::setPlayer( Player* player) {
+	ObjectFactory::instance_->player_ = player;
 }
 
 GameObject* ObjectFactory::Instantiate( GameObject::TYPE type, Vec2 pos ) {
@@ -29,10 +34,10 @@ GameObject* ObjectFactory::Instantiate( GameObject::TYPE type, Vec2 pos ) {
 void ObjectFactory::loadData( GameObject::TYPE type ) {
 	switch( type ) {
 	case GameObject::TYPE::PLAYER:
-		loadFile( type, "player.dat" );
+		loadFile( type, "Player.dat" );
 		break;
-	case GameObject::TYPE::ENEMY:
-		loadFile( type, "enemy.dat" );
+	case GameObject::TYPE::SKELETON:
+		loadFile( type, "Skeleton.dat" );
 		break;
 	default:
 		fprintf( stderr, "Unknown GameObject::Type %d", type );
@@ -181,8 +186,9 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 	case GameObject::TYPE::PLAYER:
 		obj = new Player( sprite );
 		break;
-		//	case GameObject::TYPE::ENEMY:
-		// FIXME GameObject* obj = new Enemy();
+	case GameObject::TYPE::SKELETON:
+		obj = new Skeleton( sprite, player_ );
+		break;
 	default:
 		obj = nullptr;
 		assert( 0 );

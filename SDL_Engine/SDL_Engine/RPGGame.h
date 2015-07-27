@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "SDL.h"
 #include <string>
+#include <vector>
 #include "Player.h"
 #include "Level.h"
 
@@ -19,8 +20,9 @@ private:
 	void onKeyUp( Uint32 key );
 	void checkPlayerBounds();
 	void updateCamera();
-	Player*			pPlayer_;
-	Level*			level_;
-	Vec2			cameraOffset_;
+	Player*						pPlayer_;
+	std::vector<GameObject*>	enemies_;
+	Level*						level_;
+	Vec2						cameraOffset_;
 };
 

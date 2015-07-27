@@ -3,17 +3,21 @@
 #include "MathUtils.h"
 
 class Sprite;
+class Player;
 
-class Player :
+class Skeleton :
 	public GameObject {
 public:
-	Player( Sprite* sprite );
-	~Player();
+	Skeleton( Sprite* sprite, Player* player );
+	~Skeleton();
 	void update( Uint32 dt );
 	void draw( Vec2 cameraOffset );
-	void onKeyDown( Uint32 key );
-	void onKeyUp( Uint32 key );
 	void respondLevelCollision( Vec2 collision );
+	void think();
+	void setPlayer( Player* player );
 private:
-	float		speed_;
+	float			speed_;
+	Player*			player_;
+	Uint32			lastThink_;
+	Uint32			thinkDelay_;
 };

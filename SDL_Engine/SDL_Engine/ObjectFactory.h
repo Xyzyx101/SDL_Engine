@@ -2,10 +2,14 @@
 #include "GameObject.h"
 #include "MathUtils.h"
 #include <map>
+#include <vector>
+
+class Player;
 
 class ObjectFactory {
 public:
 	static void Init( SDL_Renderer* renderer );
+	static void setPlayer( Player* player);
 	static GameObject* Instantiate( GameObject::TYPE type, Vec2 pos );
 	~ObjectFactory();
 
@@ -31,6 +35,7 @@ private:
 
 	static ObjectFactory*									instance_;
 	SDL_Renderer*											renderer_;
+	Player*													player_;
 	std::map<GameObject::TYPE, std::vector<std::string>>	dataCache_;
 };
 

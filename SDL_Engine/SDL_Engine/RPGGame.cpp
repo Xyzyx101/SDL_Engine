@@ -3,6 +3,7 @@
 #include <string>
 #include "ObjectFactory.h"
 #include "LevelLoader.h"
+#include "Collision.h"
 
 RPGGame::RPGGame() : Game(), pPlayer_( nullptr ), level_( nullptr ), cameraOffset_( Vec2( 0, 0 ) ) {}
 
@@ -10,8 +11,11 @@ RPGGame::~RPGGame() {}
 
 void RPGGame::loadAssets() {
 	ObjectFactory::Init( renderer_ );
-	GameObject* playerObject = ObjectFactory::Instantiate( GameObject::PLAYER, getScreenSize() * 0.5f );
+	GameObject* playerObject = ObjectFactory::Instantiate( GameObject::PLAYER, getScreenSize() * 0.35f );
 	pPlayer_ = static_cast<Player*>(playerObject);
+	ObjectFactory::setPlayer( pPlayer_ );
+	enemies_.push_back( ObjectFactory::Instantiate( GameObject::SKELETON, getScreenSize() * 0.5f ) );
+	
 	startLevel( Level::CAVE );
 }
 
@@ -20,8 +24,22 @@ void RPGGame::update( Uint32 dt ) {
 	checkPlayerBounds();
 	Vec2 playerCollision = level_->checkCollision( pPlayer_->getPos(), pPlayer_->getHalfWidth(), pPlayer_->getHalfHeight() );
 	if( playerCollision!=Vec2::Zero ) {
-		pPlayer_->respondLevelCollision(playerCollision);
+		pPlayer_->respondLevelCollision( playerCollision );
 	}
+	Vec2 enemyCollision;
+	for( auto enemy:enemies_ ) {
+		enemy->update( dt );
+		enemyCollision = level_->checkCollision( enemy->getPos(), enemy->getHalfWidth(), enemy->getHalfHeight() );
+		if( enemyCollision!=Vec2::Zero ) {
+			enemy->respondLevelCollision( enemyCollision );
+		}
+	}
+
+	// Pixel Collision will never work on sdl 2.0 because you cannot read from textures reliably
+	//auto obj1 = ( GameObject* )pPlayer_;
+	//auto obj2 = enemies_[0];
+ 	//auto q = Collision::PixelCollision( renderer_, obj1, obj2 );
+
 	updateCamera();
 	//fprintf( stdout, "x: %f, y: %f\n", pPlayer_->getPos().x, pPlayer_->getPos().y );
 }
@@ -29,6 +47,9 @@ void RPGGame::update( Uint32 dt ) {
 void RPGGame::draw() {
 	level_->drawLayer0( cameraOffset_ );
 	pPlayer_->draw( cameraOffset_ );
+	for( auto enemy:enemies_ ) {
+		enemy->draw( cameraOffset_ );
+	}
 	level_->drawLayer1( cameraOffset_ );
 	Game::draw();
 }
@@ -92,7 +113,7 @@ void RPGGame::updateCamera() {
 	}
 	if( cameraOffset_.x<0 ) {
 		cameraOffset_.x = 0;
-	} else if( cameraOffset_.x + screenWidth_>level_->getWidth() ) {
+	} else if( cameraOffset_.x+screenWidth_>level_->getWidth() ) {
 		cameraOffset_.x = level_->getWidth()-screenWidth_;
 	}
 	if( cameraOffset_.y<0 ) {

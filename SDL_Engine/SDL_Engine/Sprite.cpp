@@ -115,7 +115,7 @@ void Sprite::update( Uint32 dt ) {
 }
 
 // draw will draw the image to the backbuffer but SDL_RenderPresent must be called somewhere else to actually be visible
-void Sprite::draw(Vec2 cameraOffset) {
+void Sprite::draw( Vec2 cameraOffset ) {
 	SDL_Rect dest;
 	if( animated_ ) {
 		Sprite::Anim::Cell cell = drawData_.currentAnim_->getCurrentCell();
@@ -124,14 +124,14 @@ void Sprite::draw(Vec2 cameraOffset) {
 		src.y = (Sint16)cell.y_+cell.offsetY_;
 		src.w = (Sint16)cell.w_;
 		src.h = (Sint16)cell.h_;
-		dest.x = (Sint16)pos_.x-cell.halfW_ - cameraOffset.x;
-		dest.y = (Sint16)pos_.y-cell.halfH_ - cameraOffset.y;
+		dest.x = (Sint16)pos_.x-cell.halfW_-cameraOffset.x;
+		dest.y = (Sint16)pos_.y-cell.halfH_-cameraOffset.y;
 		dest.w = (Sint16)cell.w_;
 		dest.h = (Sint16)cell.h_;
 		SDL_RenderCopy( pRenderer_, pImage_, &src, &dest );
 	} else {
-		dest.x = (Sint16)pos_.x-drawData_.frame_.halfW_ - cameraOffset.x;
-		dest.y = (Sint16)pos_.y-drawData_.frame_.halfH_ - cameraOffset.y;
+		dest.x = (Sint16)pos_.x-drawData_.frame_.halfW_-cameraOffset.x;
+		dest.y = (Sint16)pos_.y-drawData_.frame_.halfH_-cameraOffset.y;
 		dest.w = drawData_.frame_.w_;
 		dest.h = drawData_.frame_.h_;
 		SDL_RenderCopy( pRenderer_, pImage_, NULL, &dest );
@@ -165,6 +165,34 @@ Sint16 Sprite::getHalfHeight() {
 	} else {
 		return drawData_.frame_.halfH_;
 	}
+}
+
+SDL_Texture* Sprite::getTextureOverlap( Sint16  left, Sint16  right, Sint16  top, Sint16  bottom ) {
+	SDL_Texture* overlapTexture = SDL_CreateTexture( pRenderer_, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, right-left, bottom-top );
+	SDL_SetTextureBlendMode( overlapTexture, SDL_BLENDMODE_BLEND );
+	SDL_SetRenderTarget( pRenderer_, overlapTexture );
+	SDL_SetRenderDrawBlendMode( pRenderer_, SDL_BLENDMODE_BLEND );
+	SDL_SetRenderDrawColor( pRenderer_, 0, 0, 0, 0 );
+	SDL_RenderClear( pRenderer_ );
+	SDL_Rect src, dest;
+	src.w = right-left;
+	src.h = bottom-top;
+	dest.x = 0;
+	dest.y = 0;
+	dest.w = right-left;
+	dest.h = bottom-top;
+	if( animated_ ) {
+		Sprite::Anim::Cell cell = drawData_.currentAnim_->getCurrentCell();
+		src.x = (Sint16)cell.x_+cell.offsetX_+getHalfWidth()+left-pos_.x;
+		src.y = (Sint16)cell.y_+cell.offsetY_+getHalfHeight()+top-pos_.y;
+	} else {
+		src.x = (Sint16)(getHalfWidth())+left-pos_.x;
+		src.y = (Sint16)(getHalfHeight())+bottom-pos_.y;
+	}
+	SDL_RenderCopy( pRenderer_, pImage_, &src, &dest );
+	SDL_SetRenderTarget( pRenderer_, NULL ); //reset renderer
+	SDL_RenderClear( pRenderer_ );
+	return overlapTexture;
 }
 
 Sprite::Anim::Anim() {}
