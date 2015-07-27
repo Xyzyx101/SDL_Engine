@@ -39,7 +39,6 @@ void Skeleton::update( Uint32 dt ) {
 void Skeleton::think( ) {
 	vel_ = player_->getPos()-pos_;
 	vel_ = VectorMath::Normalize( &vel_ );
-	fprintf( stdout, "think : x: %f y: %f", vel_.x, vel_.y );
 }
 
 void Skeleton::draw( Vec2 cameraOffset ) {

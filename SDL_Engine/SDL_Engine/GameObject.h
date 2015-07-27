@@ -24,6 +24,7 @@ public:
 	virtual void update( Uint32 dt ) = 0;
 	virtual void draw( Vec2 cameraOffset ) = 0;
 	virtual void respondLevelCollision( Vec2 collision ) = 0;
+	bool		dead_;
 protected:
 	Vec2		vel_;
 	Vec2		pos_;

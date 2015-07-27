@@ -5,6 +5,7 @@
 #include <vector>
 #include "Player.h"
 #include "Level.h"
+#include "Spawner.h"
 
 class RPGGame :
 	public Game {
@@ -20,8 +21,10 @@ private:
 	void onKeyUp( Uint32 key );
 	void checkPlayerBounds();
 	void updateCamera();
+	void removeDeadObjects();
 	Player*						pPlayer_;
 	std::vector<GameObject*>	enemies_;
+	std::vector<Spawner*>		spawners_;
 	Level*						level_;
 	Vec2						cameraOffset_;
 };

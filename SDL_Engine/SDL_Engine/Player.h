@@ -14,6 +14,7 @@ public:
 	void onKeyDown( Uint32 key );
 	void onKeyUp( Uint32 key );
 	void respondLevelCollision( Vec2 collision );
+	void respondEnemyCollision();
 private:
 	float		speed_;
 };

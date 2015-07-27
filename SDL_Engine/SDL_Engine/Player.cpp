@@ -25,7 +25,7 @@ void Player::update( Uint32 dt ) {
 		}
 	}
 	pos_ += vel_ * speed_ * (float)dt * 0.001f;
-	fprintf( stdout, "x: %f  y: %f\n", pos_.x, pos_.y );
+	//fprintf( stdout, "x: %f  y: %f\n", pos_.x, pos_.y );
 	sprite_->update( dt );
 }
 
@@ -34,29 +34,27 @@ void Player::draw(Vec2 cameraOffset) {
 	sprite_->draw(cameraOffset);
 }
 
-
-
 void Player::onKeyDown( Uint32 key ) {
 	switch( key ) {
-	case SDLK_LEFT:
+	case SDLK_a:
 		vel_.x -= 1;
 		break;
-	case SDLK_RIGHT:
+	case SDLK_d:
 		vel_.x += 1;
 		break;
-	case SDLK_UP:
+	case SDLK_w:
 		vel_.y -= 1;
 		break;
-	case SDLK_DOWN:
+	case SDLK_s:
 		vel_.y += 1;
 		break;
 	}
 }
 
 void Player::onKeyUp( Uint32 key ) {
-	if( key==SDLK_UP||key==SDLK_DOWN ) {
+	if( key==SDLK_w||key==SDLK_s) {
 		vel_.y = 0;
-	} else if( key==SDLK_LEFT||key==SDLK_RIGHT ) {
+	} else if( key==SDLK_a||key==SDLK_d) {
 		vel_.x = 0;
 	}
 }
@@ -64,4 +62,8 @@ void Player::onKeyUp( Uint32 key ) {
 void Player::respondLevelCollision( Vec2 collision ) {
 	pos_ += collision;
 	vel_ = Vec2::Zero;
+}
+
+void Player::respondEnemyCollision() {
+	fprintf( stdout, "Ouch!" );
 }

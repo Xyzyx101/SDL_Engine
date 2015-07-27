@@ -93,6 +93,7 @@ xcopy /y "..\..\SDL2_image-2.0.0\VisualC\external\lib\x86\*.dll" "$(ProjectDir)"
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Fireball.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="include\jsoncpp.cpp" />
@@ -104,10 +105,12 @@ xcopy /y "..\..\SDL2_image-2.0.0\VisualC\external\lib\x86\*.dll" "$(ProjectDir)"
     <ClCompile Include="RPGGame.cpp" />
     <ClCompile Include="SDL_Engine.cpp" />
     <ClCompile Include="Skeleton.cpp" />
+    <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Fireball.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Level.h" />
@@ -117,6 +120,7 @@ xcopy /y "..\..\SDL2_image-2.0.0\VisualC\external\lib\x86\*.dll" "$(ProjectDir)"
     <ClInclude Include="Player.h" />
     <ClInclude Include="RPGGame.h" />
     <ClInclude Include="Skeleton.h" />
+    <ClInclude Include="Spawner.h" />
     <ClInclude Include="Sprite.h" />
   </ItemGroup>
   <ItemGroup>

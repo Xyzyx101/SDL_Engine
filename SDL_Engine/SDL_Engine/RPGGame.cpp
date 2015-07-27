@@ -14,8 +14,9 @@ void RPGGame::loadAssets() {
 	GameObject* playerObject = ObjectFactory::Instantiate( GameObject::PLAYER, getScreenSize() * 0.35f );
 	pPlayer_ = static_cast<Player*>(playerObject);
 	ObjectFactory::setPlayer( pPlayer_ );
-	enemies_.push_back( ObjectFactory::Instantiate( GameObject::SKELETON, getScreenSize() * 0.5f ) );
-	
+	spawners_.push_back( new Spawner( GameObject::SKELETON, getScreenSize() * 0.5f, 3000, 8000 ) );
+	//enemies_.push_back( ObjectFactory::Instantiate( GameObject::SKELETON, getScreenSize() * 0.5f ) );
+
 	startLevel( Level::CAVE );
 }
 
@@ -26,6 +27,12 @@ void RPGGame::update( Uint32 dt ) {
 	if( playerCollision!=Vec2::Zero ) {
 		pPlayer_->respondLevelCollision( playerCollision );
 	}
+	for( auto spawner:spawners_ ) {
+		auto enemy = spawner->spawn( dt );
+		if( enemy!=nullptr ) {
+			enemies_.push_back( enemy );
+		}
+	}
 	Vec2 enemyCollision;
 	for( auto enemy:enemies_ ) {
 		enemy->update( dt );
@@ -33,15 +40,20 @@ void RPGGame::update( Uint32 dt ) {
 		if( enemyCollision!=Vec2::Zero ) {
 			enemy->respondLevelCollision( enemyCollision );
 		}
+		enemyCollision = Collision::RectToRectCollision( enemy->getPos(), enemy->getHalfWidth(), enemy->getHalfHeight(), pPlayer_->getPos(), pPlayer_->getHalfWidth(), pPlayer_->getHalfHeight() );
+		if( enemyCollision!=Vec2::Zero ) {
+			pPlayer_->respondEnemyCollision();
+		}
 	}
 
 	// Pixel Collision will never work on sdl 2.0 because you cannot read from textures reliably
 	//auto obj1 = ( GameObject* )pPlayer_;
 	//auto obj2 = enemies_[0];
- 	//auto q = Collision::PixelCollision( renderer_, obj1, obj2 );
+	//auto q = Collision::PixelCollision( renderer_, obj1, obj2 );
 
 	updateCamera();
 	//fprintf( stdout, "x: %f, y: %f\n", pPlayer_->getPos().x, pPlayer_->getPos().y );
+	removeDeadObjects();
 }
 
 void RPGGame::draw() {
@@ -58,19 +70,19 @@ void RPGGame::onKeyDown( Uint32 key ) {
 	if( key==SDLK_ESCAPE ) {
 		running_ = false;
 	}
-	if( key==SDLK_UP
-		||key==SDLK_DOWN
-		||key==SDLK_LEFT
-		||key==SDLK_RIGHT ) {
+	if( key==SDLK_w
+		||key==SDLK_s
+		||key==SDLK_a
+		||key==SDLK_d ) {
 		pPlayer_->onKeyDown( key );
 	}
 }
 
 void RPGGame::onKeyUp( Uint32 key ) {
-	if( key==SDLK_UP
-		||key==SDLK_DOWN
-		||key==SDLK_LEFT
-		||key==SDLK_RIGHT ) {
+	if( key==SDLK_w
+		||key==SDLK_s
+		||key==SDLK_a
+		||key==SDLK_d ) {
 		pPlayer_->onKeyUp( key );
 	}
 }
@@ -120,5 +132,19 @@ void RPGGame::updateCamera() {
 		cameraOffset_.y = 0;
 	} else if( cameraOffset_.y+screenHeight_>level_->getHeight() ) {
 		cameraOffset_.y = level_->getHeight()-screenHeight_;
+	}
+}
+
+void RPGGame::removeDeadObjects() {
+	if( pPlayer_->dead_ ) {
+		running_ = false;
+	}
+	for( auto it = enemies_.begin(); it!=enemies_.end(); ) {
+		if( (*it)->dead_ ) {
+			delete * it;
+			it = enemies_.erase( it );
+		} else {
+			++it;
+		}
 	}
 }

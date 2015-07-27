@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "Sprite.h"
 
-GameObject::GameObject(Sprite* sprite) : sprite_(sprite) {}
+GameObject::GameObject(Sprite* sprite) : sprite_(sprite), dead_(false) {}
 
 GameObject::~GameObject() {}
 
