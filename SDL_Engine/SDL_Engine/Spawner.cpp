@@ -13,7 +13,6 @@ Spawner::~Spawner() {}
 GameObject* Spawner::spawn( Uint32 dt ) {
 	nextTime_ -= (Sint32)dt;
 	if( nextTime_<0 ) {
-		fprintf( stdout, "spawn\n" );
 		setNextTime();
 		return ObjectFactory::Instantiate( type_, pos_ );
 	} else {

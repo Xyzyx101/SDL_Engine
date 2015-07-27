@@ -8,6 +8,7 @@ Player::~Player() {
 }
 
 void Player::update( Uint32 dt ) {
+	shootTimer_ -= (Sint32)dt;
 	vel_ = VectorMath::Normalize( &vel_ );
 	if( vel_.x==0&&vel_.y==0 ) {
 		sprite_->changeAnim( "stand" );
@@ -66,4 +67,12 @@ void Player::respondLevelCollision( Vec2 collision ) {
 
 void Player::respondEnemyCollision() {
 	fprintf( stdout, "Ouch!" );
+}
+
+bool Player::canShoot() {
+	return shootTimer_<0;
+}
+
+void Player::shoot() {
+	shootTimer_ = 750;
 }

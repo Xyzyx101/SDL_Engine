@@ -106,8 +106,11 @@ void RPGGame::onKeyUp( Uint32 key ) {
 }
 
 void RPGGame::onMouseDown( Vec2 coords ) {
+	if( !pPlayer_->canShoot() ) {
+		return;
+	}
+	pPlayer_->shoot();
 	coords = coords+cameraOffset_;
-	fprintf( stdout, "mouse test  x: %f y: %f\n", coords.x, coords.y );
 	Fireball* fireball = (Fireball*)ObjectFactory::Instantiate( GameObject::FIREBALL, pPlayer_->getPos() );
 	Vec2 direction = coords-pPlayer_->getPos();
 	fireball->setVel( direction );

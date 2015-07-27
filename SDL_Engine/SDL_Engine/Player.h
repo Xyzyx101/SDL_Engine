@@ -15,6 +15,9 @@ public:
 	void onKeyUp( Uint32 key );
 	void respondLevelCollision( Vec2 collision );
 	void respondEnemyCollision();
+	bool canShoot();
+	void shoot();
 private:
 	float		speed_;
+	Sint32		shootTimer_;
 };
