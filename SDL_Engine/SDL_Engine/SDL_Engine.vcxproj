@@ -55,12 +55,12 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\..\SDL2_image-2.0.0;..\..\SDL2-2.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\SDL2_ttf-2.0.12;..\..\SDL2_image-2.0.0;..\..\SDL2-2.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\..\SDL2-2.0.3\VisualC\SDL\Win32\Debug\SDL2.lib;..\..\SDL2-2.0.3\VisualC\SDLmain\Win32\Debug\SDL2main.lib;..\..\SDL2_image-2.0.0\VisualC\Win32\Debug\SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\SDL2-2.0.3\VisualC\SDL\Win32\Debug\SDL2.lib;..\..\SDL2-2.0.3\VisualC\SDLmain\Win32\Debug\SDL2main.lib;..\..\SDL2_image-2.0.0\VisualC\Win32\Debug\SDL2_image.lib;..\..\SDL2_ttf-2.0.12\VisualC\Win32\Debug\SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>xcopy /y "..\..\SDL2-2.0.3\VisualC\SDL\Win32\Debug\SDL2.dll" "$(ProjectDir)" &amp;

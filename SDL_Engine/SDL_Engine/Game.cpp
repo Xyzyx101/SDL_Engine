@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <stdio.h>
 #include "SDL_image.h"
+#include "SDL_ttf.h"
 #include "MathUtils.h"
 
 #define DEFAULT_SCREEN_WIDTH 1024
@@ -24,6 +25,10 @@ int Game::InitSDL() {
 		fprintf( stderr, "Unable to init SDL: %s\n", SDL_GetError() );
 		SDL_Quit();
 		return 1;
+	}
+	if( TTF_Init()<0 ) {
+		fprintf( stderr, "Unable to init SDL_TTF: %s\n", SDL_GetError() );
+		return 7;
 	}
 	window_ = SDL_CreateWindow(
 		"SDL Test Window",

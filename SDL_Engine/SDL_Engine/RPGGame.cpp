@@ -5,8 +5,9 @@
 #include "LevelLoader.h"
 #include "Collision.h"
 #include "Fireball.h"
+#include <string>
 
-RPGGame::RPGGame() : Game(), pPlayer_( nullptr ), level_( nullptr ), cameraOffset_( Vec2( 0, 0 ) ) {}
+RPGGame::RPGGame() : Game(), pPlayer_( nullptr ), level_( nullptr ), pHudFont_(nullptr), pHudTexture_(nullptr), cameraOffset_( Vec2( 0, 0 ) ) {}
 
 RPGGame::~RPGGame() {}
 
@@ -17,7 +18,11 @@ void RPGGame::loadAssets() {
 	ObjectFactory::setPlayer( pPlayer_ );
 	spawners_.push_back( new Spawner( GameObject::SKELETON, getScreenSize() * 0.5f, 3000, 8000 ) );
 	//enemies_.push_back( ObjectFactory::Instantiate( GameObject::SKELETON, getScreenSize() * 0.5f ) );
-
+	pHudFont_ = TTF_OpenFont( "MysteryQuest-Regular.ttf", 108 );
+	if( pHudFont_==NULL ) {
+		fprintf( stderr, "Unable to load font" );
+	}
+	updateHud();
 	startLevel( Level::CAVE );
 }
 
@@ -81,6 +86,7 @@ void RPGGame::draw() {
 		spell->draw( cameraOffset_ );
 	}
 	level_->drawLayer1( cameraOffset_ );
+	drawHUD();
 	Game::draw();
 }
 
@@ -185,4 +191,30 @@ void RPGGame::removeDeadObjects() {
 			++it;
 		}
 	}
+}
+
+void RPGGame::updateHud() {
+	std::string hud = "Gold : "+std::to_string( gold_ );
+	SDL_Color textColor = { 193, 6, 6 };
+	SDL_Surface* textSurface = TTF_RenderText_Solid( pHudFont_, hud.c_str(), textColor );
+	if( textSurface==nullptr ) {
+		fprintf( stderr, "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+	}
+	if( pHudTexture_!=nullptr ) {
+		SDL_DestroyTexture( pHudTexture_ );
+	}
+	pHudTexture_ = SDL_CreateTextureFromSurface( renderer_, textSurface );
+	if( pHudTexture_==nullptr ) {
+		fprintf( stderr, "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
+	}
+	SDL_FreeSurface( textSurface );
+}
+
+void RPGGame::drawHUD() {
+	SDL_Rect dest;
+	dest.x = screenWidth_/5;
+	dest.y = 0;
+	dest.w = screenWidth_*1/5;
+	dest.h = screenHeight_/20;
+	SDL_RenderCopy( renderer_, pHudTexture_, NULL, &dest );
 }

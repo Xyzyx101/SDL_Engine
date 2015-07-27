@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Level.h"
 #include "Spawner.h"
+#include "SDL_ttf.h"
 
 class RPGGame :
 	public Game {
@@ -23,11 +24,16 @@ private:
 	void checkPlayerBounds();
 	void updateCamera();
 	void removeDeadObjects();
+	void drawHUD();
+	void updateHud();
 	Player*						pPlayer_;
 	std::vector<GameObject*>	enemies_;
 	std::vector<GameObject*>	spells_;
 	std::vector<Spawner*>		spawners_;
 	Level*						level_;
 	Vec2						cameraOffset_;
+	int							gold_;
+	TTF_Font*					pHudFont_;
+	SDL_Texture*				pHudTexture_;
 };
 
