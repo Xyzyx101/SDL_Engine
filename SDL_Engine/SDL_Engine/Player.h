@@ -24,4 +24,8 @@ private:
 	Sint16		hp_;
 	Sint32		shootTimer_;
 	Sint32		hurtTimer_;
+	bool		left;
+	bool		right;
+	bool		up;
+	bool		down;
 };

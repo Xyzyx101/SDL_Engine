@@ -27,7 +27,7 @@ void RPGGame::loadAssets() {
 	playerHP_ = pPlayer_->getHealth();
 	updateHud();
 	startLevel( Level::CAVE );
-	spawners_.push_back( new Spawner( GameObject::SKELETON, level_, getScreenSize() * 0.5f, 2000, 6000, true ) );
+	spawners_.push_back( new Spawner( GameObject::SKELETON, level_, getScreenSize() * 0.5f, 2000, 4500, true ) );
 	spawners_.push_back( new Spawner( GameObject::SKELETONTOUGH, level_, getScreenSize() * 0.5f, 7000, 12000, true ) );
 	spawners_.push_back( new Spawner( GameObject::ZOMBIE, level_, getScreenSize() * 0.5f, 4000, 8000, true ) );
 	spawners_.push_back( new Spawner( GameObject::ZOMBIETOUGH, level_, getScreenSize() * 0.5f, 8000, 12000, true ) );
@@ -42,10 +42,11 @@ void RPGGame::update( Uint32 dt ) {
 
 	pPlayer_->update( dt );
 	checkPlayerBounds();
-	Vec2 playerCollision = level_->checkCollision( pPlayer_->getPos(), pPlayer_->getHalfWidth(), pPlayer_->getHalfHeight() );
-	if( playerCollision!=Vec2::Zero ) {
+	Vec2 playerCollision;
+	do {
+		playerCollision = level_->checkCollision( pPlayer_->getPos(), pPlayer_->getHalfWidth(), pPlayer_->getHalfHeight() );
 		pPlayer_->respondLevelCollision( playerCollision );
-	}
+	} while( playerCollision!=Vec2::Zero );
 	for( auto spawner:spawners_ ) {
 		auto enemy = spawner->spawn( dt );
 		if( enemy!=nullptr ) {

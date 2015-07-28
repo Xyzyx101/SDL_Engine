@@ -1,14 +1,26 @@
 #include "Player.h"
 #include "Sprite.h"
 
-Player::Player( Sprite* sprite ) : GameObject( sprite, GameObject::TYPE::PLAYER ), speed_( 150.f ), hp_(5) {}
+Player::Player( Sprite* sprite ) : GameObject( sprite, GameObject::TYPE::PLAYER ), speed_( 135.f ), hp_( 5 ) {}
 
-Player::~Player() {
-}
+Player::~Player() {}
 
 void Player::update( Uint32 dt ) {
 	shootTimer_ -= (Sint32)dt;
 	hurtTimer_ -= (Sint32)dt;
+	vel_ = Vec2::Zero;
+	if( left ) {
+		vel_.x -= 1;
+	}
+	if( right ) {
+		vel_.x += 1;
+	}
+	if( up ) {
+		vel_.y -= 1;
+	}
+	if( down ) {
+		vel_.y += 1;
+	}
 	vel_ = VectorMath::Normalize( &vel_ );
 	if( vel_.x==0&&vel_.y==0 ) {
 		sprite_->changeAnim( "stand" );
@@ -26,37 +38,45 @@ void Player::update( Uint32 dt ) {
 		}
 	}
 	pos_ += vel_ * speed_ * (float)dt * 0.001f;
-	//fprintf( stdout, "x: %f  y: %f\n", pos_.x, pos_.y );
 	sprite_->update( dt );
 }
 
-void Player::draw(Vec2 cameraOffset) {
+void Player::draw( Vec2 cameraOffset ) {
 	sprite_->setPos( pos_ );
-	sprite_->draw(cameraOffset);
+	sprite_->draw( cameraOffset );
 }
 
 void Player::onKeyDown( Uint32 key ) {
 	switch( key ) {
 	case SDLK_a:
-		vel_.x -= 1;
+		left = true;
 		break;
 	case SDLK_d:
-		vel_.x += 1;
+		right = true;
 		break;
 	case SDLK_w:
-		vel_.y -= 1;
+		up = true;
 		break;
 	case SDLK_s:
-		vel_.y += 1;
+		down = true;
 		break;
 	}
 }
 
 void Player::onKeyUp( Uint32 key ) {
-	if( key==SDLK_w||key==SDLK_s) {
-		vel_.y = 0;
-	} else if( key==SDLK_a||key==SDLK_d) {
-		vel_.x = 0;
+	switch( key ) {
+	case SDLK_a:
+		left = false;
+		break;
+	case SDLK_d:
+		right = false;
+		break;
+	case SDLK_w:
+		up = false;
+		break;
+	case SDLK_s:
+		down = false;
+		break;
 	}
 }
 
@@ -76,7 +96,7 @@ bool Player::canShoot() {
 }
 
 void Player::shoot() {
-	shootTimer_ = 350;
+	shootTimer_ = 425;
 }
 
 Uint16 Player::getHealth() {
@@ -85,5 +105,5 @@ Uint16 Player::getHealth() {
 
 void Player::hurt() {
 	hp_--;
-	hurtTimer_ = 500;
+	hurtTimer_ = 350;
 }

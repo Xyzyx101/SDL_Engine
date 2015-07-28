@@ -5,7 +5,7 @@ animated true
 
 anim {
 	animName shoot
-	frameTime 100
+	frameTime 60
 	sequence { 0 1 2 }
 	loop false
 	numCells 3

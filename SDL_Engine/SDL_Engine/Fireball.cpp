@@ -4,7 +4,7 @@
 #define PI 3.14159265
 
 Fireball::Fireball( Sprite* sprite) : GameObject(sprite, GameObject::TYPE::FIREBALL), speed_(250.f), state_(STATE::SHOOT), canHurt_(true) {
-	shootTimer_ = 300;
+	shootTimer_ = 180;
 	sprite_->changeAnim( "shoot" );
 }
 
