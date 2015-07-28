@@ -46,6 +46,8 @@ Level* LevelLoader::loadLevel( Level::LEVEL level ) {
 	int imageHeight = tileSet["imageheight"].asInt();
 
 	std::map<std::string, SDL_Texture*> layerTextures;
+	LayerMap layer0;
+	LayerMap layer1;
 	Json::Value layers = levelData["layers"];
 	for( size_t idx = 0; idx<layers.size(); ++idx ) {
 		Json::Value layerData = layers[idx]["data"];
@@ -59,16 +61,23 @@ Level* LevelLoader::loadLevel( Level::LEVEL level ) {
 		std::string layerName = layers[idx]["name"].asString();
 		if( layerName=="collision" ) {
 			createCollisionLayer( data, width, height, tileWidth, tileHeight );
+		} else if( layerName=="layer0" ) {
+			createLayerMap( layer0, data, width, height, tileWidth, tileHeight );
+		} else if( layerName=="layer1" ) {
+			createLayerMap( layer1, data, width, height, tileWidth, tileHeight );
+		} else {
+			assert( false );
 		}
 		SDL_Texture* layerTexture = createLayerTexture( tileTexture, data, width, height, tileWidth, tileHeight, imageWidth, imageHeight );
 		layerTextures[layerName] = layerTexture;
 	}
-
-	SDL_DestroyTexture( tileTexture );
 	Level* newLevel = new Level( renderer_, width * tileWidth, height * tileHeight, screenWidth_, screenHeight_, tileWidth, tileHeight );
 	newLevel->layer0Texture_ = layerTextures["layer0"];
 	newLevel->layer1Texture_ = layerTextures["layer1"];
 	newLevel->collisionLayer_ = collisionLayer_;
+	newLevel->layer0_ = layer0;
+	newLevel->layer1_ = layer1;
+	newLevel->tileTexture_ = tileTexture;
 	return newLevel;
 }
 
@@ -115,8 +124,22 @@ SDL_Texture* LevelLoader::createLayerTexture( SDL_Texture* tileTex, std::vector<
 	return layerTexture;
 }
 
+void LevelLoader::createLayerMap( LayerMap& layerMap, std::vector<int> data, int levelWidth, int levelHeight, int tileWidth, int tileHeight ) {
+	int destIdx = 0;
+	for( auto it = data.begin(); it!=data.end(); ++it ) {
+		if( *it==0 ) { ++destIdx; continue; }
+		Sint32 x = destIdx%levelWidth * tileWidth;
+		Sint32 y = destIdx/levelWidth * tileHeight;
+		auto rowMapIter = layerMap.find( y );
+		if( rowMapIter==layerMap.end() ) {
+			layerMap.emplace( y, std::map<Sint16, Uint16>() );
+		}
+		layerMap[y][x] = *it;
+		++destIdx;
+	}
+}
+
 void LevelLoader::createCollisionLayer( std::vector<int> data, int levelWidth, int levelHeight, int tileWidth, int tileHeight ) {
-	fprintf( stdout, "collisionLayer data: %i", data.size() );
 	int destIdx = 0;
 	for( auto it = data.begin(); it!=data.end(); ++it ) {
 		if( *it==0 ) { ++destIdx; continue; }

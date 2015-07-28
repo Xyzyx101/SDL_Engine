@@ -13,7 +13,7 @@
 
 Game::Game( void ) :
 running_( true ),
-//window_( 0 ),
+window_( 0 ),
 renderer_( 0 ),
 screenWidth_( DEFAULT_SCREEN_WIDTH ),
 screenHeight_( DEFAULT_SCREEN_HEIGHT ) {}
@@ -42,7 +42,7 @@ int Game::InitSDL() {
 		SDL_Quit();
 		return 2;
 	}
-	renderer_ = SDL_CreateRenderer( window_, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC );
+	renderer_ = SDL_CreateRenderer( window_, -1, SDL_RENDERER_ACCELERATED |SDL_RENDERER_PRESENTVSYNC );
 	if( renderer_==nullptr ) {
 		fprintf( stderr, "Create Renderer fails: %s\n", SDL_GetError() );
 		SDL_DestroyWindow( window_ );
@@ -52,7 +52,6 @@ int Game::InitSDL() {
 	SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "linear" );  // make the scaled rendering look smoother.
 	SDL_RenderSetLogicalSize( renderer_, screenWidth_, screenHeight_ );
 	loadAssets();
-	//SDL_SetWindowSize( window_, 1920, 1080 );
 	return 0;
 }
 
@@ -68,7 +67,10 @@ void Game::Run() {
 		dt = currentTime-lastTime;
 		lastTime = currentTime;
 		
-		//fprintf( stdout, "dt:%u\n", dt );
+		// FPS Counter
+		//if( dt>0 ) {
+		//	fprintf( stdout, "fps:%.0f\n", 1/((float)dt/1000) );
+		//}
 		
 		//clear renderer
 		SDL_SetRenderDrawColor( renderer_, CLEAR_COLOR_R, CLEAR_COLOR_G, CLEAR_COLOR_B, 255 );

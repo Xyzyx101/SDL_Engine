@@ -17,7 +17,6 @@ GameObject* Spawner::spawn( Uint32 dt ) {
 			Uint16 x, y;
 			x = rand()%screenWidth_;
 			y = rand()%screenHeight_;
-			fprintf( stdout, "Spawn random x: %u, y: %u\n", x, y );
 			return ObjectFactory::Instantiate( type_, Vec2( x, y ) );
 		} else {
 			return ObjectFactory::Instantiate( type_, pos_ );

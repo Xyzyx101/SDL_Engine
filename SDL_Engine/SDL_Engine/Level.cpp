@@ -15,6 +15,39 @@ Level::~Level() {
 	SDL_DestroyTexture( layer1Texture_ );
 }
 
+void Level::drawLayer( LAYER layerName, Vec2 cameraOffset ) {
+	LayerMap layer;
+	switch( layerName ) {
+	case LAYER0:
+		layer = layer0_;
+		break;
+	case LAYER1:
+		layer = layer1_;
+		break;
+	}
+	SDL_Rect src, dest;
+	src.w = tileWidth_;
+	src.h = tileHeight_;
+	dest.w = tileWidth_;
+	dest.h = tileHeight_;
+	Sint32 left = cameraOffset.x-tileWidth_;
+	Sint32 right = cameraOffset.x+screenWidth_+tileWidth_;
+	Sint32 top = cameraOffset.y-tileHeight_;
+	Sint32 bottom = cameraOffset.y+screenHeight_+tileHeight_;
+	int texWidth, texHeight;
+	SDL_QueryTexture( tileTexture_, NULL, NULL, &texWidth, &texHeight );
+	for( auto rowIt = layer.lower_bound( top ); rowIt!=layer.upper_bound( bottom ); ++rowIt ) {
+		for( auto colIt = rowIt->second.lower_bound( left ); colIt!=rowIt->second.upper_bound( right ); ++colIt ) {
+			dest.x = colIt->first-cameraOffset.x;
+			dest.y = rowIt->first-cameraOffset.y;
+			Uint16 tileIdx = colIt->second-1; //minus 1 because 0 is no tile
+			src.x = (Sint16)((tileIdx * tileWidth_)%texWidth);
+			src.y = (Sint16)((tileIdx * tileWidth_)/texWidth * tileHeight_);
+			SDL_RenderCopy( renderer_, tileTexture_, &src, &dest );
+		}
+	}
+}
+
 void Level::drawLayer0( Vec2 cameraOffset ) {
 	SDL_Rect src, dest;
 	src.x = 0;

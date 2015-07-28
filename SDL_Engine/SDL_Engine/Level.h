@@ -4,13 +4,20 @@
 #include <map>
 #include <set>
 
+typedef std::map<Sint16, std::map<Sint16, Uint16>> LayerMap;
+
 class Level {
 	friend class LevelLoader;
 public:
 	enum LEVEL {
 		CAVE
 	};
+	enum LAYER {
+		LAYER0,
+		LAYER1
+	};
 	~Level();
+	void drawLayer( LAYER layeName, Vec2 cameraOffset );
 	void drawLayer0( Vec2 cameraOffset );
 	void drawLayer1( Vec2 cameraOffset );
 	Uint16 getWidth();
@@ -24,7 +31,9 @@ private:
 	SDL_Texture*						layer0Texture_;
 	SDL_Texture*						layer1Texture_;
 	std::map<Sint32, std::set<Sint32>>	collisionLayer_;
-	int	fuckYouIdiot;
+	LayerMap							layer0_;
+	LayerMap							layer1_;
+	SDL_Texture*						tileTexture_;
 	Uint16								width_;
 	Uint16								height_;
 	Uint16								screenWidth_;

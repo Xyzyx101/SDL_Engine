@@ -64,7 +64,6 @@ void RPGGame::update( Uint32 dt ) {
 	Vec2 spellCollision;
 	for( auto spell:spells_ ) {
 		spell->update( dt );
-		//spellCollision = level_->checkCollision( spell->getPos(), spell->getHalfWidth(), spell->getHalfHeight() );
 		if( spellCollision!=Vec2::Zero ) {
 			spell->respondLevelCollision( spellCollision );
 		}
@@ -92,15 +91,17 @@ void RPGGame::update( Uint32 dt ) {
 }
 
 void RPGGame::draw() {
-	level_->drawLayer0( cameraOffset_ );
+	//level_->drawLayer0( cameraOffset_ );
+	level_->drawLayer( Level::LAYER::LAYER0, cameraOffset_ );
 	pPlayer_->draw( cameraOffset_ );
 	for( auto enemy:enemies_ ) {
 		enemy->draw( cameraOffset_ );
 	}
+	//level_->drawLayer1( cameraOffset_ );
+	level_->drawLayer( Level::LAYER::LAYER1, cameraOffset_ );
 	for( auto spell:spells_ ) {
 		spell->draw( cameraOffset_ );
 	}
-	level_->drawLayer1( cameraOffset_ );
 	drawHUD();
 	Game::draw();
 }
