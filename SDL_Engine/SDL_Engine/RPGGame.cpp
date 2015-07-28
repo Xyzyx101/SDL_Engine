@@ -12,6 +12,8 @@ RPGGame::RPGGame() : Game(), pPlayer_( nullptr ), level_( nullptr ), pHudFont_( 
 RPGGame::~RPGGame() {}
 
 void RPGGame::loadAssets() {
+	playerDead_ = false;
+	pHudDeadTexture_ = nullptr;
 	ObjectFactory::Init( renderer_ );
 	GameObject* playerObject = ObjectFactory::Instantiate( GameObject::PLAYER, getScreenSize() * 0.35f );
 	pPlayer_ = static_cast<Player*>(playerObject);
@@ -21,6 +23,8 @@ void RPGGame::loadAssets() {
 	if( pHudFont_==NULL ) {
 		fprintf( stderr, "Unable to load font" );
 	}
+	gold_ = 0;
+	playerHP_ = pPlayer_->getHealth();
 	updateHud();
 	startLevel( Level::CAVE );
 	spawners_.push_back( new Spawner( GameObject::SKELETON, level_, getScreenSize() * 0.5f, 2000, 6000, true ) );
@@ -31,6 +35,11 @@ void RPGGame::loadAssets() {
 }
 
 void RPGGame::update( Uint32 dt ) {
+	if( playerDead_ ) {
+		deadTimer_ -= (Sint32)dt;
+		updateHud();
+	}
+
 	pPlayer_->update( dt );
 	checkPlayerBounds();
 	Vec2 playerCollision = level_->checkCollision( pPlayer_->getPos(), pPlayer_->getHalfWidth(), pPlayer_->getHalfHeight() );
@@ -58,6 +67,11 @@ void RPGGame::update( Uint32 dt ) {
 				enemy->dead_ = true;
 			} else {
 				pPlayer_->respondEnemyCollision();
+				Uint16 newHealth = pPlayer_->getHealth();
+				if( playerHP_!=newHealth ) {
+					playerHP_ = newHealth;
+					updateHud();
+				}
 			}
 		}
 	}
@@ -107,6 +121,12 @@ void RPGGame::draw() {
 }
 
 void RPGGame::onKeyDown( Uint32 key ) {
+	if( playerDead_ ) {
+		if( deadTimer_<0 ) {
+			restartLevel();
+		}
+		return;
+	}
 	if( key==SDLK_ESCAPE ) {
 		running_ = false;
 	}
@@ -128,6 +148,12 @@ void RPGGame::onKeyUp( Uint32 key ) {
 }
 
 void RPGGame::onMouseDown( Vec2 coords ) {
+	if( playerDead_ ) {
+		if( deadTimer_<0 ) {
+			restartLevel();
+		}
+		return;
+	}
 	if( !pPlayer_->canShoot() ) {
 		return;
 	}
@@ -188,8 +214,13 @@ void RPGGame::updateCamera() {
 }
 
 void RPGGame::removeDeadObjects() {
-	if( pPlayer_->dead_ ) {
-		running_ = false;
+	if( playerHP_<=0&&!playerDead_ ) {
+		playerDead_ = true;
+		deadTimer_ = 4000;
+		onKeyUp( SDLK_w );
+		onKeyUp( SDLK_s );
+		onKeyUp( SDLK_a );
+		onKeyUp( SDLK_d );
 	}
 	Uint16 levelWidth = level_->getWidth();
 	Uint16 levelHeight = level_->getHeight();
@@ -226,7 +257,7 @@ void RPGGame::removeDeadObjects() {
 }
 
 void RPGGame::updateHud() {
-	std::string hud = "Gold : "+std::to_string( gold_ );
+	std::string hud = "Gold : "+std::to_string( gold_ )+"                    Health : "+(playerHP_<=0 ? "Dead" : std::to_string( playerHP_ ));
 	SDL_Color textColor = { 193, 6, 6 };
 	SDL_Surface* textSurface = TTF_RenderText_Solid( pHudFont_, hud.c_str(), textColor );
 	if( textSurface==nullptr ) {
@@ -240,13 +271,56 @@ void RPGGame::updateHud() {
 		fprintf( stderr, "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
 	}
 	SDL_FreeSurface( textSurface );
+	if( playerDead_ ) {
+		if( deadTimer_<2000 ) {
+			hud = "Dead";
+		} else if( deadTimer_<3000 ) {
+			hud = "are";
+		} else	if( deadTimer_<4000 ) {
+			hud = "You";
+		}
+		SDL_Surface* textSurface = TTF_RenderText_Solid( pHudFont_, hud.c_str(), textColor );
+		if( textSurface==nullptr ) {
+			fprintf( stderr, "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+		}
+		if( pHudDeadTexture_!=nullptr ) {
+			SDL_DestroyTexture( pHudDeadTexture_ );
+		}
+		pHudDeadTexture_ = SDL_CreateTextureFromSurface( renderer_, textSurface );
+		if( pHudDeadTexture_==nullptr ) {
+			fprintf( stderr, "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
+		}
+		SDL_FreeSurface( textSurface );
+	}
 }
 
 void RPGGame::drawHUD() {
 	SDL_Rect dest;
 	dest.x = screenWidth_/5;
-	dest.y = 0;
-	dest.w = screenWidth_*1/5;
+	dest.y = 5;
+	dest.w = screenWidth_*3/5;
 	dest.h = screenHeight_/20;
 	SDL_RenderCopy( renderer_, pHudTexture_, NULL, &dest );
+	if( pHudDeadTexture_!=nullptr ) {
+		dest.y = screenHeight_/4;
+		dest.h = screenHeight_/2;
+		SDL_RenderCopy( renderer_, pHudDeadTexture_, NULL, &dest );
+	}
+}
+
+void RPGGame::restartLevel() {
+	for( auto it = spawners_.begin(); it!=spawners_.end(); ) {
+		delete * it;
+		it = spawners_.erase( it );
+	}
+	for( auto it = spells_.begin(); it!=spells_.end(); ) {
+		delete * it;
+		it = spells_.erase( it );
+	}
+	for( auto it = enemies_.begin(); it!=enemies_.end(); ) {
+		delete * it;
+		it = enemies_.erase( it );
+	}
+	delete pPlayer_;
+	loadAssets();
 }

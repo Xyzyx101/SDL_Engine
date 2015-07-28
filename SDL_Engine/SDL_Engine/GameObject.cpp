@@ -3,7 +3,9 @@
 
 GameObject::GameObject(Sprite* sprite, TYPE type) : sprite_(sprite), type_(type), dead_(false) {}
 
-GameObject::~GameObject() {}
+GameObject::~GameObject() {
+	delete sprite_;
+}
 
 void GameObject::setPos( Vec2 pos ) {
 	pos_ = pos;

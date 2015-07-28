@@ -1,14 +1,14 @@
 #include "Player.h"
 #include "Sprite.h"
 
-Player::Player( Sprite* sprite ) : GameObject( sprite, GameObject::TYPE::PLAYER ), speed_( 150.f ) {}
+Player::Player( Sprite* sprite ) : GameObject( sprite, GameObject::TYPE::PLAYER ), speed_( 150.f ), hp_(5) {}
 
 Player::~Player() {
-	delete sprite_;
 }
 
 void Player::update( Uint32 dt ) {
 	shootTimer_ -= (Sint32)dt;
+	hurtTimer_ -= (Sint32)dt;
 	vel_ = VectorMath::Normalize( &vel_ );
 	if( vel_.x==0&&vel_.y==0 ) {
 		sprite_->changeAnim( "stand" );
@@ -66,7 +66,9 @@ void Player::respondLevelCollision( Vec2 collision ) {
 }
 
 void Player::respondEnemyCollision() {
-	fprintf( stdout, "Ouch!" );
+	if( hurtTimer_<0 ) {
+		hurt();
+	}
 }
 
 bool Player::canShoot() {
@@ -77,6 +79,11 @@ void Player::shoot() {
 	shootTimer_ = 350;
 }
 
-void Player::hurt() {
+Uint16 Player::getHealth() {
+	return hp_;
+}
 
+void Player::hurt() {
+	hp_--;
+	hurtTimer_ = 500;
 }

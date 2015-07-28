@@ -201,6 +201,7 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 	GameObject* obj;
 	switch( type ) {
 	case GameObject::TYPE::PLAYER:
+		sprite->changeAnim( anims.begin()->first );
 		obj = new Player( sprite );
 		break;
 	case GameObject::TYPE::SKELETON:

@@ -7,7 +7,6 @@ Enemy::Enemy( Sprite* sprite, Player* player, GameObject::TYPE type, float speed
 }
 
 Enemy::~Enemy() {
-	delete sprite_;
 }
 
 void Enemy::update( Uint32 dt ) {

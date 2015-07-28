@@ -26,14 +26,19 @@ private:
 	void removeDeadObjects();
 	void drawHUD();
 	void updateHud();
+	void restartLevel();
 	Player*						pPlayer_;
 	std::vector<GameObject*>	enemies_;
 	std::vector<GameObject*>	spells_;
 	std::vector<Spawner*>		spawners_;
 	Level*						level_;
 	Vec2						cameraOffset_;
-	int							gold_;
+	Uint16						gold_;
+	Sint16						playerHP_;
 	TTF_Font*					pHudFont_;
 	SDL_Texture*				pHudTexture_;
+	SDL_Texture*				pHudDeadTexture_;
+	Sint32						deadTimer_;
+	bool						playerDead_;
 };
 
