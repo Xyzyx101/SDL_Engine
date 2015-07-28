@@ -16,18 +16,18 @@ void RPGGame::loadAssets() {
 	GameObject* playerObject = ObjectFactory::Instantiate( GameObject::PLAYER, getScreenSize() * 0.35f );
 	pPlayer_ = static_cast<Player*>(playerObject);
 	ObjectFactory::setPlayer( pPlayer_ );
-	
+
 	pHudFont_ = TTF_OpenFont( "MysteryQuest-Regular.ttf", 108 );
 	if( pHudFont_==NULL ) {
 		fprintf( stderr, "Unable to load font" );
 	}
 	updateHud();
 	startLevel( Level::CAVE );
-	spawners_.push_back( new Spawner( GameObject::SKELETON, getScreenSize() * 0.5f, 2000, 6000,  true, level_->getWidth(), level_->getHeight() ) );
-	spawners_.push_back( new Spawner( GameObject::SKELETONTOUGH, getScreenSize() * 0.5f, 7000, 12000, true, level_->getWidth(), level_->getHeight() ) );
-	spawners_.push_back( new Spawner( GameObject::ZOMBIE, getScreenSize() * 0.5f, 4000, 8000, true, level_->getWidth(), level_->getHeight() ) );
-	spawners_.push_back( new Spawner( GameObject::ZOMBIETOUGH, getScreenSize() * 0.5f, 8000, 12000, true, level_->getWidth(), level_->getHeight() ) );
-	spawners_.push_back( new Spawner( GameObject::TREASURE, Vec2::Zero, 3000, 5000, true, level_->getWidth(), level_->getHeight() ) );
+	spawners_.push_back( new Spawner( GameObject::SKELETON, level_, getScreenSize() * 0.5f, 2000, 6000, true ) );
+	spawners_.push_back( new Spawner( GameObject::SKELETONTOUGH, level_, getScreenSize() * 0.5f, 7000, 12000, true ) );
+	spawners_.push_back( new Spawner( GameObject::ZOMBIE, level_, getScreenSize() * 0.5f, 4000, 8000, true ) );
+	spawners_.push_back( new Spawner( GameObject::ZOMBIETOUGH, level_, getScreenSize() * 0.5f, 8000, 12000, true ) );
+	spawners_.push_back( new Spawner( GameObject::TREASURE, level_, Vec2::Zero, 3000, 5000, true ) );
 }
 
 void RPGGame::update( Uint32 dt ) {

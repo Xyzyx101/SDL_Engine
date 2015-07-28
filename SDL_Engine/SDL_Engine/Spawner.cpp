@@ -1,10 +1,13 @@
 #include "Spawner.h"
 #include <stdlib.h>
 #include "ObjectFactory.h"
+#include "Level.h"
 
-Spawner::Spawner( GameObject::TYPE type, Vec2 pos, Uint16 minTime, Uint16 maxTime, bool random, Uint16 screenWidth, Uint16 screenHeight ) : type_( type ), pos_( pos ), minTime_( minTime ), maxTime_( maxTime ), random_( random ), screenWidth_( screenWidth ), screenHeight_( screenHeight ) {
+Spawner::Spawner( GameObject::TYPE type, Level* level, Vec2 pos, Uint16 minTime, Uint16 maxTime, bool random ) : type_( type ), level_(level), pos_( pos ), minTime_( minTime ), maxTime_( maxTime ), random_( random ) {
 	srand( SDL_GetTicks() );
 	setNextTime();
+	screenWidth_ = level_->getWidth();
+	screenHeight_ = level_->getHeight();
 }
 
 Spawner::~Spawner() {}
@@ -15,8 +18,10 @@ GameObject* Spawner::spawn( Uint32 dt ) {
 		setNextTime();
 		if( random_ ) {
 			Uint16 x, y;
-			x = rand()%screenWidth_;
-			y = rand()%screenHeight_;
+			do {
+				x = rand()%screenWidth_;
+				y = rand()%screenHeight_;
+			} while( level_->checkCollision(Vec2(x,y), 32, 32) != Vec2::Zero);
 			return ObjectFactory::Instantiate( type_, Vec2( x, y ) );
 		} else {
 			return ObjectFactory::Instantiate( type_, pos_ );
