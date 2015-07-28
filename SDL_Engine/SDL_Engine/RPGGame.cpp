@@ -15,7 +15,7 @@ void RPGGame::loadAssets() {
 	playerDead_ = false;
 	pHudDeadTexture_ = nullptr;
 	ObjectFactory::Init( renderer_ );
-	GameObject* playerObject = ObjectFactory::Instantiate( GameObject::PLAYER, getScreenSize() * 0.35f );
+	GameObject* playerObject = ObjectFactory::Instantiate( GameObject::PLAYER, Vec2(112.f, 144.f) );
 	pPlayer_ = static_cast<Player*>(playerObject);
 	ObjectFactory::setPlayer( pPlayer_ );
 

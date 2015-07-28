@@ -49,7 +49,7 @@ int Game::InitSDL() {
 		SDL_Quit();
 		return 3;
 	}
-	SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "linear" );  // make the scaled rendering look smoother.
+	SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "nearest" ); 
 	SDL_RenderSetLogicalSize( renderer_, screenWidth_, screenHeight_ );
 	loadAssets();
 	return 0;

@@ -48,6 +48,10 @@ void Enemy::draw( Vec2 cameraOffset ) {
 void Enemy::respondLevelCollision( Vec2 collision ) {
 	pos_ += collision;
 	vel_ = vel_ * -1.f;
+	float xRand = (float)(rand()%60) * 0.01-0.3f;
+	float yRand = (float)(rand()%60) * 0.01-0.3f;
+	vel_.x += xRand;
+	vel_.y += yRand;
 }
 
 void Enemy::setPlayer( Player* player ) {

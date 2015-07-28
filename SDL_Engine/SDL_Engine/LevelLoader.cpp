@@ -116,7 +116,10 @@ SDL_Texture* LevelLoader::createLayerTexture( SDL_Texture* tileTex, std::vector<
 		src.y = (Sint16)((tileIdx * tileWidth)/imageWidth * tileHeight);
 		dest.x = (Sint16)((destIdx % levelWidth) * tileWidth);
 		dest.y = (Sint16)((destIdx/levelWidth) * tileHeight);
-		SDL_RenderCopy( renderer_, tileTex, &src, &dest );
+		if( SDL_RenderCopy( renderer_, tileTex, &src, &dest )!=0 ) {
+			fprintf( stderr, "createLayerTexture error : %s\n", SDL_GetError() );
+		}
+
 		destIdx++;
 	}
 
