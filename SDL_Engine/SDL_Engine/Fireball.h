@@ -8,6 +8,8 @@ public:
 	void update( Uint32 dt );
 	void draw( Vec2 cameraOffset );
 	void setVel( Vec2 vel );
+	void hurt();
+	bool canHurt();
 private:
 	enum STATE {
 		SHOOT,
@@ -22,5 +24,6 @@ private:
 	STATE			state_;
 	Sint32			shootTimer_;
 	Sint32			explodeTimer_;
+	bool			canHurt_;
 };
 

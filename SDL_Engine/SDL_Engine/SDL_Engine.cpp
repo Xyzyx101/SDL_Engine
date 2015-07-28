@@ -5,7 +5,6 @@
 #define NDEBUG
 #endif
 
-
 #include <windows.h>
 #include "SDL.h"
 #include "RPGGame.h"

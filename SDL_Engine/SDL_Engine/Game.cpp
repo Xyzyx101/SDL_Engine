@@ -13,7 +13,7 @@
 
 Game::Game( void ) :
 running_( true ),
-window_( 0 ),
+//window_( 0 ),
 renderer_( 0 ),
 screenWidth_( DEFAULT_SCREEN_WIDTH ),
 screenHeight_( DEFAULT_SCREEN_HEIGHT ) {}
@@ -52,6 +52,7 @@ int Game::InitSDL() {
 	SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "linear" );  // make the scaled rendering look smoother.
 	SDL_RenderSetLogicalSize( renderer_, screenWidth_, screenHeight_ );
 	loadAssets();
+	//SDL_SetWindowSize( window_, 1920, 1080 );
 	return 0;
 }
 

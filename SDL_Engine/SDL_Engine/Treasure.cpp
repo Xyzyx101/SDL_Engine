@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 Treasure::Treasure( Sprite* sprite ) : GameObject( sprite , GameObject::TYPE::TREASURE)  {
-	disappearTimer_ = rand()%(4000)+4000;
+	disappearTimer_ = rand()%(10000)+10000;
 }
 
 Treasure::~Treasure() {}
@@ -22,4 +22,8 @@ void Treasure::draw( Vec2 cameraOffset ) {
 
 void Treasure::respondLevelCollision( Vec2 collision ) {
 	pos_ += collision;
+}
+
+void Treasure::hurt() {
+
 }

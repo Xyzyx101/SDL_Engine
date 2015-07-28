@@ -17,14 +17,16 @@ void RPGGame::loadAssets() {
 	pPlayer_ = static_cast<Player*>(playerObject);
 	ObjectFactory::setPlayer( pPlayer_ );
 	
-	//enemies_.push_back( ObjectFactory::Instantiate( GameObject::SKELETON, getScreenSize() * 0.5f ) );
 	pHudFont_ = TTF_OpenFont( "MysteryQuest-Regular.ttf", 108 );
 	if( pHudFont_==NULL ) {
 		fprintf( stderr, "Unable to load font" );
 	}
 	updateHud();
 	startLevel( Level::CAVE );
-	spawners_.push_back( new Spawner( GameObject::SKELETON, getScreenSize() * 0.5f, 3000, 8000 ) );
+	spawners_.push_back( new Spawner( GameObject::SKELETON, getScreenSize() * 0.5f, 3000, 7000,  true, level_->getWidth(), level_->getHeight() ) );
+	spawners_.push_back( new Spawner( GameObject::SKELETONTOUGH, getScreenSize() * 0.5f, 6000, 12000, true, level_->getWidth(), level_->getHeight() ) );
+	spawners_.push_back( new Spawner( GameObject::ZOMBIE, getScreenSize() * 0.5f, 5000, 9000, true, level_->getWidth(), level_->getHeight() ) );
+	spawners_.push_back( new Spawner( GameObject::ZOMBIETOUGH, getScreenSize() * 0.5f, 6000, 12000, true, level_->getWidth(), level_->getHeight() ) );
 	spawners_.push_back( new Spawner( GameObject::TREASURE, Vec2::Zero, 3000, 5000, true, level_->getWidth(), level_->getHeight() ) );
 }
 
@@ -62,15 +64,20 @@ void RPGGame::update( Uint32 dt ) {
 	Vec2 spellCollision;
 	for( auto spell:spells_ ) {
 		spell->update( dt );
-		spellCollision = level_->checkCollision( spell->getPos(), spell->getHalfWidth(), spell->getHalfHeight() );
+		//spellCollision = level_->checkCollision( spell->getPos(), spell->getHalfWidth(), spell->getHalfHeight() );
 		if( spellCollision!=Vec2::Zero ) {
 			spell->respondLevelCollision( spellCollision );
 		}
 		for( auto enemy:enemies_ ) {
 			enemyCollision = Collision::RectToRectCollision( spell->getPos(), spell->getHalfWidth(), spell->getHalfHeight(), enemy->getPos(), enemy->getHalfWidth(), enemy->getHalfHeight() );
 			if( enemyCollision!=Vec2::Zero ) {
+				if( spell->getType()==GameObject::TYPE::FIREBALL ) {
+					Fireball* fireball = (Fireball*)spell;
+					if( fireball->canHurt() ) {
+						enemy->hurt();
+					}
+				}
 				spell->respondLevelCollision( Vec2::Zero );
-				enemy->dead_ = true;
 			}
 		}
 	}

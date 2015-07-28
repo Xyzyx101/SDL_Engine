@@ -1,16 +1,16 @@
-#include "Skeleton.h"
+#include "Enemy.h"
 #include "Sprite.h"
 #include "Player.h"
 
-Skeleton::Skeleton( Sprite* sprite, Player* player ) : GameObject( sprite, GameObject::TYPE::SKELETON ), player_(player), speed_( 100.f ), thinkDelay_( 1000 ) {
+Enemy::Enemy( Sprite* sprite, Player* player, GameObject::TYPE type, float speed, Uint16 hp ) : GameObject( sprite,type ), player_(player), speed_( speed ), hp_(hp), thinkDelay_( 1000 ) {
 	lastThink_ = SDL_GetTicks();
 }
 
-Skeleton::~Skeleton() {
+Enemy::~Enemy() {
 	delete sprite_;
 }
 
-void Skeleton::update( Uint32 dt ) {
+void Enemy::update( Uint32 dt ) {
 	Uint32 thisTick = SDL_GetTicks();
 	if( thisTick-lastThink_>thinkDelay_ ) {
 		lastThink_ = thisTick;
@@ -36,21 +36,28 @@ void Skeleton::update( Uint32 dt ) {
 	sprite_->update( dt );
 }
 
-void Skeleton::think( ) {
+void Enemy::think( ) {
 	vel_ = player_->getPos()-pos_;
 	vel_ = VectorMath::Normalize( &vel_ );
 }
 
-void Skeleton::draw( Vec2 cameraOffset ) {
+void Enemy::draw( Vec2 cameraOffset ) {
 	sprite_->setPos( pos_ );
 	sprite_->draw( cameraOffset );
 }
 
-void Skeleton::respondLevelCollision( Vec2 collision ) {
+void Enemy::respondLevelCollision( Vec2 collision ) {
 	pos_ += collision;
 	vel_ = vel_ * -1.f;
 }
 
-void Skeleton::setPlayer( Player* player ) {
+void Enemy::setPlayer( Player* player ) {
 	player_ = player;
+}
+
+void Enemy::hurt() {
+	hp_--;
+	if( hp_<=0 ) {
+		dead_ = true;
+	}
 }

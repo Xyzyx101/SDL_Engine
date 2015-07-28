@@ -5,7 +5,6 @@
 Spawner::Spawner( GameObject::TYPE type, Vec2 pos, Uint16 minTime, Uint16 maxTime, bool random, Uint16 screenWidth, Uint16 screenHeight ) : type_( type ), pos_( pos ), minTime_( minTime ), maxTime_( maxTime ), random_( random ), screenWidth_( screenWidth ), screenHeight_( screenHeight ) {
 	srand( SDL_GetTicks() );
 	setNextTime();
-	nextTime_ = -1;
 }
 
 Spawner::~Spawner() {}

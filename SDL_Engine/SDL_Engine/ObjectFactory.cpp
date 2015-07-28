@@ -6,7 +6,7 @@
 #include <cctype>
 #include <assert.h>
 #include "Player.h"
-#include "Skeleton.h"
+#include "Enemy.h"
 #include "Fireball.h"
 #include "Treasure.h"
 #include "Sprite.h"
@@ -20,7 +20,7 @@ void ObjectFactory::Init( SDL_Renderer* renderer ) {
 	ObjectFactory::instance_->renderer_ = renderer;
 }
 
-void ObjectFactory::setPlayer( Player* player) {
+void ObjectFactory::setPlayer( Player* player ) {
 	ObjectFactory::instance_->player_ = player;
 }
 
@@ -40,6 +40,15 @@ void ObjectFactory::loadData( GameObject::TYPE type ) {
 		break;
 	case GameObject::TYPE::SKELETON:
 		loadFile( type, "Skeleton.dat" );
+		break;
+	case GameObject::TYPE::SKELETONTOUGH:
+		loadFile( type, "SkeletonTough.dat" );
+		break;
+	case GameObject::TYPE::ZOMBIE:
+		loadFile( type, "Zombie.dat" );
+		break;
+	case GameObject::TYPE::ZOMBIETOUGH:
+		loadFile( type, "ZombieTough.dat" );
 		break;
 	case GameObject::TYPE::FIREBALL:
 		loadFile( type, "Fireball.dat" );
@@ -195,7 +204,16 @@ GameObject* ObjectFactory::createObject( GameObject::TYPE type ) {
 		obj = new Player( sprite );
 		break;
 	case GameObject::TYPE::SKELETON:
-		obj = new Skeleton( sprite, player_ );
+		obj = new Enemy( sprite, player_, type, 100.f, 1 );
+		break;
+	case GameObject::TYPE::SKELETONTOUGH:
+		obj = new Enemy( sprite, player_, type, 135.f, 2 );
+		break;
+	case GameObject::TYPE::ZOMBIE:
+		obj = new Enemy( sprite, player_, type, 50.f, 3 );
+		break;
+	case GameObject::TYPE::ZOMBIETOUGH:
+		obj = new Enemy( sprite, player_, type, 70.f, 5 );
 		break;
 	case GameObject::TYPE::FIREBALL:
 		obj = new Fireball( sprite );

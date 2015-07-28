@@ -9,6 +9,9 @@ public:
 	enum TYPE {
 		PLAYER,
 		SKELETON,
+		SKELETONTOUGH,
+		ZOMBIE,
+		ZOMBIETOUGH,
 		FIREBALL,
 		TREASURE
 	};
@@ -27,6 +30,7 @@ public:
 	virtual void update( Uint32 dt ) = 0;
 	virtual void draw( Vec2 cameraOffset ) = 0;
 	virtual void respondLevelCollision( Vec2 collision ) = 0;
+	virtual void hurt() = 0;
 	bool		dead_;
 protected:
 	Vec2		vel_;

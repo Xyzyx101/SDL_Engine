@@ -74,5 +74,9 @@ bool Player::canShoot() {
 }
 
 void Player::shoot() {
-	shootTimer_ = 750;
+	shootTimer_ = 350;
+}
+
+void Player::hurt() {
+
 }

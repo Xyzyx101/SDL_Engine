@@ -17,6 +17,7 @@ public:
 	void respondEnemyCollision();
 	bool canShoot();
 	void shoot();
+	void hurt();
 private:
 	float		speed_;
 	Sint32		shootTimer_;

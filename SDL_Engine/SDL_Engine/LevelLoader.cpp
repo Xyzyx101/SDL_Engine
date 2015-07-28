@@ -6,6 +6,7 @@
 #include "include/json/json.h"
 #include "Level.h"
 #include <assert.h>
+#include "Game.h"
 
 LevelLoader::LevelLoader( SDL_Renderer* renderer, Uint16 screenWidth, Uint16 screenHeight ) : renderer_( renderer ), screenWidth_( screenWidth ), screenHeight_( screenHeight ) {}
 
@@ -86,10 +87,11 @@ SDL_Texture* LevelLoader::loadTexture( std::string path ) {
 }
 
 SDL_Texture* LevelLoader::createLayerTexture( SDL_Texture* tileTex, std::vector<int> data, int levelWidth, int levelHeight, int tileWidth, int tileHeight, int imageWidth, int imageHeight ) {
+	
 	SDL_Texture* layerTexture = SDL_CreateTexture( renderer_, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, levelWidth * tileWidth, levelHeight * tileHeight );
+
 	SDL_SetTextureBlendMode( layerTexture, SDL_BLENDMODE_BLEND );
 	SDL_SetRenderTarget( renderer_, layerTexture );
-	SDL_SetRenderDrawBlendMode( renderer_, SDL_BLENDMODE_BLEND );
 	SDL_SetRenderDrawColor( renderer_, 0, 0, 0, 0 );
 	SDL_RenderClear( renderer_ );
 	SDL_Rect src, dest;
@@ -108,11 +110,13 @@ SDL_Texture* LevelLoader::createLayerTexture( SDL_Texture* tileTex, std::vector<
 		SDL_RenderCopy( renderer_, tileTex, &src, &dest );
 		destIdx++;
 	}
+
 	SDL_SetRenderTarget( renderer_, NULL ); //reset renderer
 	return layerTexture;
 }
 
 void LevelLoader::createCollisionLayer( std::vector<int> data, int levelWidth, int levelHeight, int tileWidth, int tileHeight ) {
+	fprintf( stdout, "collisionLayer data: %i", data.size() );
 	int destIdx = 0;
 	for( auto it = data.begin(); it!=data.end(); ++it ) {
 		if( *it==0 ) { ++destIdx; continue; }

@@ -3,7 +3,7 @@
 
 #define PI 3.14159265
 
-Fireball::Fireball( Sprite* sprite) : GameObject(sprite, GameObject::TYPE::TREASURE), speed_(250.f), state_(STATE::SHOOT) {
+Fireball::Fireball( Sprite* sprite) : GameObject(sprite, GameObject::TYPE::FIREBALL), speed_(250.f), state_(STATE::SHOOT), canHurt_(true) {
 	shootTimer_ = 300;
 	sprite_->changeAnim( "shoot" );
 }
@@ -52,4 +52,11 @@ void Fireball::explode() {
 	vel_ = Vec2::Zero;
 	explodeTimer_ = 825;
 	sprite_->changeAnim( "explode" );
+	canHurt_ = false;
+}
+
+void Fireball::hurt() {}
+
+bool Fireball::canHurt() {
+	return canHurt_;
 }
