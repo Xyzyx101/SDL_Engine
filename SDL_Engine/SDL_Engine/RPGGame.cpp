@@ -23,10 +23,10 @@ void RPGGame::loadAssets() {
 	}
 	updateHud();
 	startLevel( Level::CAVE );
-	spawners_.push_back( new Spawner( GameObject::SKELETON, getScreenSize() * 0.5f, 3000, 7000,  true, level_->getWidth(), level_->getHeight() ) );
-	spawners_.push_back( new Spawner( GameObject::SKELETONTOUGH, getScreenSize() * 0.5f, 6000, 12000, true, level_->getWidth(), level_->getHeight() ) );
-	spawners_.push_back( new Spawner( GameObject::ZOMBIE, getScreenSize() * 0.5f, 5000, 9000, true, level_->getWidth(), level_->getHeight() ) );
-	spawners_.push_back( new Spawner( GameObject::ZOMBIETOUGH, getScreenSize() * 0.5f, 6000, 12000, true, level_->getWidth(), level_->getHeight() ) );
+	spawners_.push_back( new Spawner( GameObject::SKELETON, getScreenSize() * 0.5f, 2000, 6000,  true, level_->getWidth(), level_->getHeight() ) );
+	spawners_.push_back( new Spawner( GameObject::SKELETONTOUGH, getScreenSize() * 0.5f, 7000, 12000, true, level_->getWidth(), level_->getHeight() ) );
+	spawners_.push_back( new Spawner( GameObject::ZOMBIE, getScreenSize() * 0.5f, 4000, 8000, true, level_->getWidth(), level_->getHeight() ) );
+	spawners_.push_back( new Spawner( GameObject::ZOMBIETOUGH, getScreenSize() * 0.5f, 8000, 12000, true, level_->getWidth(), level_->getHeight() ) );
 	spawners_.push_back( new Spawner( GameObject::TREASURE, Vec2::Zero, 3000, 5000, true, level_->getWidth(), level_->getHeight() ) );
 }
 
@@ -191,7 +191,16 @@ void RPGGame::removeDeadObjects() {
 	if( pPlayer_->dead_ ) {
 		running_ = false;
 	}
+	Uint16 levelWidth = level_->getWidth();
+	Uint16 levelHeight = level_->getHeight();
 	for( auto it = enemies_.begin(); it!=enemies_.end(); ) {
+		Vec2 pos = (*it)->getPos();
+		if( pos.x < 0||
+			pos.x > levelWidth||
+			pos.y<0||
+			pos.y>levelHeight ) {
+			(*it)->dead_ = true;
+		}
 		if( (*it)->dead_ ) {
 			delete * it;
 			it = enemies_.erase( it );
@@ -200,6 +209,13 @@ void RPGGame::removeDeadObjects() {
 		}
 	}
 	for( auto it = spells_.begin(); it!=spells_.end(); ) {
+		Vec2 pos = (*it)->getPos();
+		if( pos.x < 0||
+			pos.x > levelWidth||
+			pos.y<0||
+			pos.y>levelHeight ) {
+			(*it)->dead_ = true;
+		}
 		if( (*it)->dead_ ) {
 			delete * it;
 			it = spells_.erase( it );

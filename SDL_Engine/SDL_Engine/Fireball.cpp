@@ -14,7 +14,7 @@ void Fireball::update( Uint32 dt ) {
 	switch( state_ ) {
 	case STATE::SHOOT:
 		shootTimer_ -= (Sint32)dt;
-		if( shootTimer_<0 ) {
+		if( shootTimer_<0) {
 			sprite_->changeAnim( "fly" );
 			state_ = STATE::FLY;
 		}
@@ -48,6 +48,9 @@ void Fireball::respondLevelCollision( Vec2 collision ) {
 }
 
 void Fireball::explode() {
+	if( state_==STATE::EXPLODE ) {
+		return;
+	}
 	state_ = STATE::EXPLODE;
 	vel_ = Vec2::Zero;
 	explodeTimer_ = 825;
